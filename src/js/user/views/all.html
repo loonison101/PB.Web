@@ -1,0 +1,56 @@
+<div class="container theme-showcase" role="main">
+    <ul class="breadcrumb" style="margin-top:60px;">
+        <li><a href="#" ui-sref="home">Home</a></li>
+        <li class="active">View All Players</li>
+    </ul>
+
+    <div class="row">
+        <div class="">
+            <div class="panel panel-primary">
+                <div class="panel-heading relative">
+                    <h3 class="panel-title">Players ({{model.players.length}})</h3>
+
+                </div>
+                <div class="panel-body">
+
+                    <div class="table-responsive" ng-if="model.players.length > 0">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Call Sign</th>
+                                <th>Email</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="player in model.players">
+                                <td>
+                                    {{player.Callsign}}
+                                </td>
+                                <td>
+                                    <button class="btn btn-link" ui-sref="userView({id: player.Id})">{{player.Email}}</button>
+                                </td>
+                                <td>
+                                    {{player.FirstName}}
+                                </td>
+                                <td>
+                                    {{player.LastName}}
+                                </td>
+                                <td>
+                                    <button class="btn btn-link" ng-click="deletePlayer(player)" title="Delete Player"><i class="fa fa-times pointer" style="font-size: 1.5em;"></i></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="text-align: center; font-size: 2em;">
+                        <i class="fa fa-refresh fa-spin" ng-if="model.isLoading"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

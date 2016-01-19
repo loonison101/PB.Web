@@ -1,0 +1,108 @@
+<div class="row">
+    <div class="">
+        <div class="panel panel-default">
+
+            <div loadout-header></div>
+
+            <div class="panel-body">
+
+                <div ng-if="!vm.isLoadingMarkers && vm.markers.length == 0">
+                    You don't have any markers...
+                </div>
+
+                <div ng-repeat="loadout in vm.loadouts | orderBy:'-Created' ">
+                    <div class="row">
+
+                        <!--NAME/DATE/DELETE BUTTON-->
+                        <div loadout-actions></div>
+
+                        <hr style="margin-top:0px;margin-bottom:10px;margin-top:10px;"/>
+
+                        <!--IMAGE LEFT SIDE-->
+                        <div loadout-image></div>
+
+                        <!--ALL CONTENT RIGT SIDE-->
+                        <div class="col-md-8">
+
+                            <!--HEAD GEAR-->
+                            <div gear-row body-part="'Head Gear'" gears="loadout.Gears" section="1"
+                                 editing="loadout._isEditing" loadout-id="loadout.Id"></div>
+
+                            <!--TORSO GEAR-->
+                            <div gear-row body-part="'Torso'" gears="loadout.Gears" section="2"
+                                 editing="loadout._isEditing" loadout-id="loadout.Id"></div>
+
+                            <!--ARM/HANDS GEAR-->
+                            <div gear-row body-part="'Arm/Hands'" gears="loadout.Gears" section="3"
+                                 editing="loadout._isEditing" loadout-id="loadout.Id"></div>
+
+                            <!--LEGS GEAR-->
+                            <div gear-row body-part="'Legs'" gears="loadout.Gears" section="4"
+                                 editing="loadout._isEditing" loadout-id="loadout.Id"></div>
+
+                            <!--SHOES GEAR-->
+                            <div gear-row body-part="'Shoes'" gears="loadout.Gears" section="5"
+                                 editing="loadout._isEditing" loadout-id="loadout.Id"></div>
+
+                        </div>
+                    </div>
+
+                    <hr ng-if="!$last"/>
+
+                </div>
+
+                <div style="text-align:center; font-size:2em;">
+                    <i class="fa fa-refresh fa-spin" ng-if="vm.isLoadingMarkers"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/ng-template" id="createLoadout.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Create Loadout</h3>
+        </div>
+        <div class="modal-body" stop-event="touchend">
+            <form class="form-horizontal" name="form">
+
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">Name*</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" autofocus ng-model="vm.loadout.Name"/>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-primary" type="button" ng-click="ok()" ng-disabled="!vm.loadout.Name"><span
+                    ng-show="vm.isLoading">Saving...</span><span ng-show="!vm.isLoading">OK</span></button>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="changeLoadoutImage.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Change Loadout Image</h3>
+        </div>
+        <div class="modal-body" stop-event="touchend">
+            <form class="form-horizontal" name="form">
+
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">Image URL*</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" autofocus ng-model="vm.loadout.ImageUrl"/>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-primary" type="button" ng-click="ok()" ng-disabled="!vm.loadout.Name"><span
+                    ng-show="vm.isLoading">Saving...</span><span ng-show="!vm.isLoading">Save</span></button>
+        </div>
+    </script>
+</div>

@@ -1,0 +1,215 @@
+<div class="container theme-showcase" role="main">
+    <ul class="breadcrumb" style="margin-top:60px;">
+        <li><a href="#" ui-sref="home">Home</a></li>
+        <li class="active">View User</li>
+    </ul>
+    <!--<div class="jumbotron center" ng-show="foundUser">-->
+        <!--<h2>-->
+            <!--Viewing User: <b ng-if="user != null">{{ user.Email }}</b><span ng-if="user == null">Loading...</span>-->
+        <!--</h2>-->
+    <!--</div>-->
+
+    <div class="jumbotron" ng-show="!foundUser">
+        <h2></h2>
+        <alert type="danger"><i class="fa fa-exclamation-triangle"></i> User not found! <a ui-sref="home">Go Home</a></alert>
+    </div>
+
+    <div class="row">
+        <div class="">
+            <div class="panel panel-default">
+                <div class="panel-heading relative">
+                    <h3 class="panel-title display-inline">Basic Information </h3>
+
+                    <div title="Edit" class="pointer display-inline" style="margin: 0 10px;">
+                        <button class="btn btn-info btn-xs" ng-click="editUser()"><i class="fa fa-pencil"></i></button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal" ng-if="user != null">
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Call Sign</label>
+                            <div class="col-sm-10">
+                                {{ user.Callsign}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+                            <div class="col-sm-10">
+                                {{ user.Email}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">First Name</label>
+                            <div class="col-sm-10">
+                                {{ user.FirstName}}
+
+                                <span ng-if="!user.FirstName"><i class="fa fa-thumbs-down fa-fw"></i>Empty</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">Last Name</label>
+                            <div class="col-sm-10">
+                                {{ user.LastName }}
+
+                                <span ng-if="!user.LastName"><i class="fa fa-thumbs-down fa-fw"></i>Empty</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+                            <div class="col-sm-10">
+                                <!--<a href="#"><i class="fa fa-fw fa-pencil"></i>Reset Password</a>-->
+                                <!--<i>*Password Reset Coming Soon</i>-->
+                                <button class="btn btn-link" ng-click="resetPassword()" style="padding-left: 0px;">Reset</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">Other</label>
+                            <div class="col-sm-10">
+                                <div>Date Created: {{ user.Created | date:'medium'}}</div>
+                                <div>Date Modified: {{ user.Modified | date:'medium'}}</div>
+                            </div>
+                        </div>
+                    </form>
+                    <div style="text-align:center; font-size:2em;">
+                        <i class="fa fa-refresh fa-spin" ng-if="user == null"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+            <div class="">
+                <div class="panel panel-default">
+                    <div class="panel-heading relative">
+                        <h3 class="panel-title display-inline">Rank and Team Information</h3>
+                        <div title="Add Team" class="pointer display-inline" style="margin: 0 10px;">
+                            <button class="btn btn-info btn-xs" ui-sref="teamsView"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+
+                        <div ng-if="user.Teams.length == 0">
+                            You are not in a team... <a href="#" ui-sref="teamsView">Add?</a>
+                        </div>
+                        <div class="table-responsive" ng-if="user.Teams.length > 0">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="center" style="text-align:center;">Default?</th>
+                                        <th>Team</th>
+                                        <th>Rank</th>
+                                        <th style="text-align:center;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="team in user.Teams">
+                                        <td class="center" style="text-align:center;">
+                                            <!--<i class="fa fa-thumbs-up" ng-if="team.IsDefaultTeam" tooltip="This is your default team"></i>-->
+
+                                            <input type="radio" name="teams" ng-value="true" ng-model="team.IsDefaultTeam" style="height:2em;width:2em;" ng-change="changeDefaultTeam(team)" />
+
+                                        </td>
+                                        <td>
+                                            <a href="#" ui-sref="teamView({id: team.TeamId})">
+                                                <img ng-src="{{team.TeamImageUrl}}" class="profile-image" style="margin-right:5px;" />{{team.TeamName}}
+                                            </a>
+                                        </td>
+                                        <td ng-if="team.HasRank">
+                                            <a href="#" ui-sref="userView.changeRank({teamId: team.TeamId})">
+                                                <img ng-src="{{team.RankImageUrl}}" class="profile-image" style="margin-right:5px;"/>{{team.RankName}}
+                                            </a>
+                                        </td>
+                                        <td ng-if="!team.HasRank">
+                                            <i class="fa fa-thumbs-down fa-fw"></i>No Rank! <a href="#" ui-sref="userView.changeRank({teamId: team.TeamId})">Add?</a>
+                                        </td>
+                                        <td style="text-align:center;">
+                                            <!--<button onclick="confirm('hi');">click me</button>-->
+                                            <!--{{team._showDelete}}-->
+                                            <button class="btn btn-link" ng-click="deleteTeam(team.UserTeamId)"><i class="fa fa-times pointer" style="font-size:1.5em;"></i></button>
+                                            <!--<button class="btn btn-primary btn-xs" ng-click="team._showDelete=false" ><i class="fa fa-times pointer bigger-1-5" tooltip="Remove From Team"></i></button>-->
+                                            <!--<span collapse="team._showDelete">Are you sure? <button class="btn btn-xs btn-danger margin-right-10" ng-click="team._showDelete=false">No</button><button class="btn btn-xs btn-primary">Yes</button></span>-->
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="text-align:center; font-size:2em;">
+                            <i class="fa fa-refresh fa-spin" ng-if="user == null"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div view-markers-overview  player-id="user.Id"></div>
+
+    <div view-loadouts-overview player-id="user.Id"></div>
+
+
+
+
+
+</div>
+
+<div ui-view="modal"></div>
+
+<script type="text/ng-template" id="editUser.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Edit user: {{user.Email}}</h3>
+    </div>
+    <div class="modal-body" stop-event="touchend">
+        <form class="form-horizontal" ng-submit="ok()">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Call Sign</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" autofocus ng-model="user.Callsign" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">First Name</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" ng-model="user.FirstName"  />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Last Name</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" ng-model="user.LastName"  />
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-primary" type="button" ng-click="ok()" ng-disabled="isLoading"><span ng-show="isLoading">Saving...</span><span ng-show="!isLoading">OK</span></button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="resetPassword.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Reset Password For: {{user.Email}}</h3>
+    </div>
+    <div class="modal-body" stop-event="touchend">
+        <form class="form-horizontal" ng-submit="ok()">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">New Password</label>
+                <div class="col-lg-10">
+                    <input type="password" class="form-control" autofocus ng-model="password"  />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Retype</label>
+                <div class="col-lg-10">
+                    <input type="password" class="form-control" ng-model="retype"  />
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-primary" type="button" ng-click="ok()" ng-disabled="password == null || password != retype || isLoading"><span ng-show="isLoading">Saving...</span><span ng-show="!isLoading">OK</span></button>
+    </div>
+</script>

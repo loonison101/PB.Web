@@ -1,0 +1,191 @@
+//body {
+//  background-color: #A5A5A5;
+//}
+
+@import 'shared_classes';
+
+.pointer {
+  cursor: pointer;
+}
+
+.no-underline {
+  text-decoration: initial !important;
+}
+
+.profile-image {
+  height: 30px;
+  width:30px;
+}
+
+.text-right {
+  text-align:right;
+}
+
+.relative {
+  position:relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.right-10 {
+  right:10px;
+}
+
+.block {
+  display: inline-block;
+}
+
+.red {
+  color:red;
+}
+
+.bigger-1-5 {
+  font-size:1.5em;
+}
+
+.mobile {
+    display: none;
+}
+
+@media (max-width:768px)  {
+    .mobile {
+        display: inline-block;
+    }
+}
+
+.modal { 
+    position: fixed; 
+    top: 3%; 
+    right: 3%; 
+    left: 3%; 
+    width: auto; 
+    margin: 0; 
+}
+.modal-body { 
+    height: 60%; 
+}
+
+.margin-right-10{
+    margin-right: 10px;
+}
+
+
+
+.img-responsive {
+  margin: 0 auto;
+}
+
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}
+
+.max-med-image {
+  max-height: 150px;
+  max-width: 150px;
+}
+
+.display-inline {
+  display:inline;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height:6px;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+.image-container {
+  position: relative;
+  //width: 200px;
+  //height: 300px;
+}
+.image-container .after {
+  position: absolute;
+  top: 0;
+  //left: 0;
+  //width: 100%;
+  //height: 100%;
+  //display: none;
+  color: #FFF;
+  //height:75px;
+  //width:75px;
+  right:0;
+  //height:35px;
+  //width:35px;
+
+  display: block;
+  //background: rgba(0, 0, 0, .6);
+}
+//.image-container:hover .after {
+//  display: block;
+//  background: rgba(0, 0, 0, .6);
+//}
+
+.max-dimensions {
+  height:100%;
+  width:100%;
+}
+
+.bigger-2 {
+  font-size:2em;
+}
+
+.editable-buttons {
+  .btn {
+    padding: 1px 5px;
+    font-size: 13px;
+    line-height: 1.5;
+    border-radius: 3px;
+  }
+
+}
+
+.editable-controls {
+  input {
+    height: 30px;
+  }
+}
+
+.gear-placeholder {
+  height:75px;
+  width:75px;
+  background-color:white;
+}
+
+.grey-date {
+  margin-left:10px;
+  font-size:12px;
+  color:grey;
+}
+
+.no-wrap {
+  white-space:nowrap;
+}

@@ -1,0 +1,35 @@
+<div style="display:inline;">
+    <button class="btn btn-info btn-xs" ng-click="addMarker()"><i class="fa fa-plus"></i></button>
+
+    <script type="text/ng-template" id="addMarkerModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Create Marker</h3>
+        </div>
+        <div class="modal-body" stop-event="touchend">
+            <form class="form-horizontal" ng-submit="ok()">
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">Name</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" autofocus ng-model="vm.marker.Name" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">Manufacturer</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" ng-model="vm.marker.Manufacturer"  />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">Image URL</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" ng-model="vm.marker.ImageUrl"  />
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-primary" type="button" ng-click="ok()" ng-disabled="isLoading"><span ng-show="isLoading">Saving...</span><span ng-show="!isLoading">OK</span></button>
+        </div>
+    </script>
+</div>

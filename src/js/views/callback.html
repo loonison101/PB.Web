@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>callback page</title>
+</head>
+<body>
+    <script>
+        function processTokenCallback() {
+
+            var hash = window.location.hash.substr(1);
+
+            var result = hash.split('&').reduce(function (result,item){
+                var parts = item.split('=');
+                result[parts[0]] = parts[1];
+                return result;
+            }, {});
+
+            if (!result.error && result.access_token !== undefined){
+                localStorage['access_token'] = result.access_token;
+
+                window.location = window.location.protocol + '//' + window.location.host + '/pb.web';
+            } else {
+                alert('Error: '+ (error.message || error));
+            }
+        }
+        if (window.location.hash){
+            processTokenCallback();
+        }
+    </script>
+</body>
+</html>

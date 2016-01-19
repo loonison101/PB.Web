@@ -1,11 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="pb" class="no-js">
 <head>
-    <meta charset="UTF-8">
-    <title>PB</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>My AngularJS App</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">-->
+    <!--<link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">-->
+    <!--<link rel="stylesheet" href="app.css">-->
+    <!--<script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>-->
+
+    <link rel="stylesheet" href="content/dark.bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="bower_components/angular-ui-notification/dist/angular-ui-notification.min.css">
+    <link rel="stylesheet" href="bower_components/angular-xeditable/dist/css/xeditable.css">
+    <link rel="stylesheet" href="content/sass/app.css">
 </head>
 <body>
-    <h1>yesasdasdfasdffss</h1>
-    <script src="bower_components/angular/angular.min.js"></script>
+<nav class="navbar navbar-default navbar-fixed-top" ng-controller="navigationCtrl">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" ui-sref="home">PB {{version}}</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse" collapse="!NavigationFactory.showNav">
+            <ul class="nav navbar-nav ng-cloak">
+                <li ng-repeat="item in NavigationFactory.menuItems" ng-class="{'active': item.isActive}">
+                    <a href="#" ui-sref="{{item.uiSrefName}}" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;NavigationFactory.setActive(item, navCollapsed);">{{item.name}}</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li ng-show="fullName != ''"><a style="color: white;">[ Hi, {{fullName}}! ]</a></li>
+                <li><a href="#" ui-sref="siteSettings" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;" title="Site Settings"><i class="fa fa-bolt fa-fw bigger-1-5 "></i><span class="mobile">Site Settings</span></a></li>
+                <li><a href="#" ui-sref="userView({id: user.Id})" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;" title="Profile"><i class="fa fa-cog fa-fw bigger-1-5 "></i><span class="mobile">Settings</span></a></li>
+                <li><a href="Account/Logout" title="Sign Out"><i class="fa fa-sign-out fa-fw bigger-1-5 "></i><span class="mobile">Sign Out</span></a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+
+
+<div ui-view></div>
+
+<!--<div>Angular seed app: v<span app-version></span></div>-->
+
+
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-touch/angular-touch.min.js"></script>
+<script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="bower_components/angular-ui-notification/dist/angular-ui-notification.min.js"></script>
+<script src="bower_components/moment/min/moment.min.js"></script>
+<script src="bower_components/angular-xeditable/dist/js/xeditable.min.js"></script>
+<script src="bower_components/angular.uuid2/dist/angular-uuid2.min.js"></script>
+<script src="bower_components/oidc-token-manager/dist/oidc-token-manager.min.js"></script>
+
+<script src="js/app.js"></script>
+<script src="config/local/config.js"></script>
+<script src="js/controllers/homeCtrl.js"></script>
+<script src="js/controllers/navigationCtrl.js"></script>
+<script src="js/controllers/siteSettingsCtrl.js"></script>
+<script src="js/directives/addNotification.js"></script>
+<script src="js/directives/autofocus.js"></script>
+<script src="js/directives/deleteAllTeams.js"></script>
+<script src="js/directives/stopEvent.js"></script>
+<script src="js/rank/controllers/rankEditCtrl.js"></script>
+<script src="js/rank/controllers/rankViewCtrl.js"></script>
+<script src="js/rank/services/RankFactory.js"></script>
+<script src="js/services/GearFactory.js"></script>
+<script src="js/services/LoadoutFactory.js"></script>
+<script src="js/services/MarkerFactory.js"></script>
+<script src="js/services/NavigationFactory.js"></script>
+<script src="js/services/NotificationFactory.js"></script>
+<script src="js/services/OidcManager.js"></script>
+<script src="js/services/tokenContainer.js"></script>
+<script src="js/team/controllers/teamCtrl.js"></script>
+<script src="js/team/controllers/teamsCtrl.js"></script>
+<script src="js/team/services/TeamFactory.js"></script>
+<script src="js/user/controllers/playersCtrl.js"></script>
+<script src="js/user/controllers/userEditCtrl.js"></script>
+<script src="js/user/controllers/userViewChangeRankCtrl.js"></script>
+<script src="js/user/controllers/userViewCtrl.js"></script>
+<script src="js/user/controllers/userViewDeleteTeamCtrl.js"></script>
+<script src="js/user/directives/viewLoadoutsOverview.js"></script>
+<script src="js/user/directives/viewMarkersOverview.js"></script>
+<script src="js/user/services/UserFactory.js"></script>
+
+
 </body>
 </html>

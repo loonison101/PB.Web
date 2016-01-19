@@ -1,0 +1,321 @@
+﻿<div class="container theme-showcase" role="main">
+
+    <ul class="breadcrumb" style="margin-top:60px;">
+        <li><a href="#" ui-sref="home">Home</a></li>
+        <li class="active">View Team</li>
+    </ul>
+
+    <div class="row">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Team Image
+                <div title="Edit" class="pointer display-inline" style="margin: 0 10px;">
+                    <button class="btn btn-info btn-xs" ng-click="editTeam()"><i class="fa fa-pencil"></i></button>
+
+                </div>
+            </div>
+            <div class="panel-body">
+
+
+                <div class="center" ng-show="!team.ImageUrl && team != null">No Image</div>
+                <img class="img-responsive" style="max-width: 280px;" ng-src="{{team.ImageUrl || '//:0'}}"/>
+
+                <div style="text-align: center; font-size: 2em;">
+                    <i class="fa fa-refresh fa-spin" ng-if="team == null"></i>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="">
+            <div class="panel panel-primary">
+                <div class="panel-heading relative">
+                    Basic Information
+                    <div title="Edit" class="pointer display-inline" style="margin: 0 10px;">
+                        <button class="btn btn-info btn-xs" ng-click="editTeam()"><i class="fa fa-pencil"></i></button>
+
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal" ng-if="team != null">
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
+                            <div class="col-sm-10">
+                                {{ team.Name}}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">Description</label>
+                            <div class="col-sm-10">
+                                {{team.Description}}
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">Other</label>
+                            <div class="col-sm-10">
+                                <div>Date Created: {{ timeSince(team.Created)}} ago</div>
+                                <div>Date Modified: {{ timeSince(team.Modified)}} ago</div>
+                            </div>
+                        </div>
+
+
+                    </form>
+                    <div style="text-align: center; font-size: 2em;">
+                        <i class="fa fa-refresh fa-spin" ng-if="team == null"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="">
+            <div class="panel panel-primary">
+                <div class="panel-heading relative">
+                    <h3 class="panel-title">Ranks ({{team.Ranks.length}})</h3>
+
+                </div>
+                <div class="panel-body">
+
+                    <div class="right" style="text-align: right; margin: 5px;">
+                        <button class="btn btn-primary btn-xs" ng-click="createRank()">Create Rank</button>
+                    </div>
+
+                    <div class="table-responsive" ng-if="team.Ranks.length > 0">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th class="center">In Rank?</th>
+                                <th class="center">Image</th>
+                                <th>Name</th>
+                                <th style="text-align: center;">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="rank in team.Ranks | orderBy:'Sequence'">
+                                <td class="center">
+                                    <input type="radio" name="ranks" ng-value="true" ng-model="rank.IsUserInRank" style="height:2em;width:2em;" ng-change="changeRank(rank)" />
+                                </td>
+                                <td>
+                                    <div class="center" ng-show="rank.ImageUrl == null">No Image</div>
+                                    <img class="img-responsive max-med-image" ng-src="{{rank.ImageUrl}}"/>
+                                </td>
+                                <td>
+                                    ({{rank.Sequence}}) {{rank.Name}}
+                                </td>
+                                <td style="text-align: center;">
+                                    <button class="btn btn-link" ng-click="deleteRank(rank)"><i class="fa fa-times pointer" style="font-size: 1.5em;"></i></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="text-align: center; font-size: 2em;">
+                        <i class="fa fa-refresh fa-spin" ng-if="team == null"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="">
+            <div class="panel panel-primary">
+                <div class="panel-heading relative">
+                    <h3 class="panel-title">Players ({{team.Users.length}})</h3>
+
+                </div>
+                <div class="panel-body">
+
+                    <div class="table-responsive" ng-if="team.Users.length > 0">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Call Sign</th>
+                                <th>Name</th>
+                                <th style="text-align: center;">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="user in team.Users">
+                                <td>
+                                    <img class="img-responsive max-med-image" ng-src="{{user.ImageUrl}}"/>
+                                </td>
+                                <td>{{user.Callsign}}</td>
+                                <td>
+                                    <button class="btn btn-link" ui-sref="userView({id: user.Id})">{{user.Email}}</button>
+                                </td>
+                                <td style="text-align: center;">
+                                    <button class="btn btn-link" ng-click="deleteUser(user)"><i class="fa fa-times pointer" style="font-size: 1.5em;"></i></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="text-align: center; font-size: 2em;">
+                        <i class="fa fa-refresh fa-spin" ng-if="team == null"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="addRank.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Add Rank</h3>
+    </div>
+    <div class="modal-body" stop-event="touchend">
+        <form class="form-horizontal" name="form">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Image Preview</label>
+                <div class="col-lg-10">
+                    <p ng-if="rank.ImageUrl == null || rank.ImageUrl == undefined || rank.ImageUrl == ''">No Image Set</p>
+                    <img class="img-responsive" ng-src="{{rank.ImageUrl}}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Image URL</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" autofocus ng-model="rank.ImageUrl" />
+                    <p class="help-block">If you do not have a url, then <a href="#" ng-init="hideImageUpload = true" ng-click="hideImageUpload = !hideImageUpload">upload image?</a></p>
+                    <div collapse="hideImageUpload" >
+
+                        <!--<span class="btn btn-primary btn-file">-->
+
+                        <!--Browse-->
+                        <!--<input type="file" ngf-select ng-model="file" name="file"-->
+                        <!--accept="image/*" ngf-max-size="10MB" required>-->
+                        <!--<div class="button btn btn-primary" ngf-select="upload($file)">Upload Image</div>-->
+                        <button class="button btn btn-primary" ngf-select="upload($file)" accept="image/*" ngf-max-size="10MB" ng-disabled="isUploadingImage">
+                            <span ng-show="!isUploadingImage">Upload Image</span>
+                            <span ng-show="isUploadingImage">Uploading...</span>
+                        </button>
+
+                        <!--</span>-->
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Name*</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" ng-model="rank.Name" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Sequence <span style="font-size:.7em;">(Corporal - 1 | General - 10)</span></label>
+                <div class="col-lg-10">
+                    <input type="number" min="1" max="100" class="form-control"  ng-model="rank.Sequence" />
+                </div>
+            </div>
+
+        </form>
+        <!--<form name="form">
+            Single Image with validations
+            <div class="button" ngf-select ng-model="file" name="file" ngf-pattern="'image/*'"
+                 accept="image/*" ngf-max-size="20MB" ngf-min-height="100"
+                 ngf-resize="{width: 100, height: 100}">Select</div>
+            Multiple files
+            <div class="button" ngf-select ng-model="files" ngf-multiple="true">Select</div>
+            Drop files: <div ngf-drop ng-model="files" class="drop-box">Drop</div>
+            <button type="submit" ng-click="submit()">submit</button>
+        </form>-->
+        
+        
+
+        <!--Upload on form submit or button click-->
+        <!--<form ng-app="fileUpload" name="form">-->
+            <!--<input type="file" ngf-select ng-model="file" name="file"-->
+                   <!--accept="image/*" ngf-max-size="10MB" required>-->
+            <!--<button type="submit" ng-click="submit()">submit</button>-->
+            <!--</form>-->
+            <!--Single Image with validations
+            <div class="button" ngf-select ng-model="file" name="file" ngf-pattern="'image/*'"
+                 accept="image/*" ngf-max-size="20MB" ngf-min-height="100"
+                 ngf-resize="{width: 100, height: 100}">Select</div>
+            Multiple files
+            <div class="button" ngf-select ng-model="files" ngf-multiple="true">Select</div>
+            Drop files: <div ngf-drop ng-model="files" class="drop-box">Drop</div>
+            <button type="submit" ng-click="submit()">submit</button>
+        </form>
+
+        Upload right away after file selection:
+        <div class="button" ngf-select="upload($file)">Upload on file select</div>
+        <div class="button" ngf-select="uploadFiles($files)" multiple="multiple">Upload on file select</div>
+        Drop File:
+        <div ngf-drop="uploadFiles($files)" class="drop-box"
+             ngf-drag-over-class="'dragover'" ngf-multiple="true"
+             ngf-pattern="'image/*,application/pdf'">Drop Images or PDFs files here</div>
+        <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+        Image thumbnail: <img ngf-thumbnail="file || '/thumb.jpg'">
+        Audio preview: <audio controls ngf-src="file"></audio>
+        Video preview: <video controls ngf-src="file"></video>-->
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-primary" type="button" ng-click="ok()" ng-disabled="rank.Name == '' || rank.Name == null"><span ng-show="isLoading">Saving...</span><span ng-show="!isLoading">OK</span></button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="editTeam.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Edit Team</h3>
+    </div>
+    <div class="modal-body" stop-event="touchend">
+        <form class="form-horizontal" name="form">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Image Preview</label>
+                <div class="col-lg-10">
+                    <p ng-if="team.ImageUrl == null || team.ImageUrl == undefined || team.ImageUrl == ''">No Image Set</p>
+                    <img class="img-responsive" style="max-width: 280px;" ng-src="{{team.ImageUrl || '//:0'}}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Image URL</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" autofocus ng-model="team.ImageUrl" ng-model-options="{ debounce: 1000 }"/>
+                    <p class="help-block">If you do not have a url, then <a href="#" ng-init="hideImageUpload = true" ng-click="hideImageUpload = !hideImageUpload">upload image?</a></p>
+                    <div collapse="hideImageUpload" >
+                        <button class="button btn btn-primary" ngf-select="upload($file)" accept="image/*" ngf-max-size="10MB" ng-disabled="isUploadingImage">
+                            <span ng-show="!isUploadingImage">Upload Image</span>
+                            <span ng-show="isUploadingImage">Uploading...</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Name*</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" ng-model="team.Name" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Description</label>
+                <div class="col-lg-10">
+                    <!--<input type="number" min="1" max="100" class="form-control"  ng-model="team.Sequence" />-->
+                    <textarea class="form-control" ng-model="team.Description" ></textarea>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-primary" type="button" ng-click="ok()" ng-disabled="team.Name == '' || team.Name == null"><span ng-show="isLoading">Saving...</span><span ng-show="!isLoading">OK</span></button>
+    </div>
+</script>
+
+<div ui-view="modal"></div>

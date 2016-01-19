@@ -14,5 +14,20 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "devDependencies": {
+    "font-awesome": "fontawesome#~4.5.0",
+    "angular": "~1.4.8",
+    "angular-ui-notification": "~0.1.0",
+    "angular-xeditable": "~0.1.9",
+    "angular-touch": "~1.4.8",
+    "angular-file-upload": "~2.2.0",
+    "ui-bootstrap": "~1.1.0",
+    "angular-ui-router": "~0.2.15",
+    "moment": "~2.11.1",
+    "Angular.uuid2": "angular-uuid2#*",
+    "oidc-token-manager": "~1.0.1",
+    "angular-bootstrap": "~1.1.0",
+    "ng-file-upload": "~11.1.1"
+  }
 }

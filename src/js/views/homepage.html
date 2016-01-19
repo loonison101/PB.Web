@@ -1,0 +1,99 @@
+﻿<div class="container theme-showcase" role="main">
+
+    <ul class="breadcrumb" style="margin-top:60px;">
+        <li class="active">Home</li>
+    </ul>
+
+    <!--<div class="jumbotron center">
+        <h1>Nothing here yet!</h1>
+        <p>
+            More content coming soon...
+        </p>
+        <hr/>
+        <p>
+            View your profile <a href="#" ui-sref="userView">here</a>.
+        </p>
+        <p>
+            Add or remove teams <a href="#" ui-sref="teamsView">here</a>.
+        </p>
+    </div>-->
+
+
+<div class="row">
+    <div class="panel panel-default relative">
+        <div class="panel-heading relative">
+            <h3 class="panel-title">Quick Tasks</h3>
+        </div>
+        <div class="panel-body">
+
+
+
+
+            <p>
+                View your profile <a href="#" ui-sref="userView">here</a>.
+            </p>
+            <p>
+                Add or remove teams <a href="#" ui-sref="teamsView">here</a>.
+            </p>
+
+
+
+
+
+
+        </div>
+
+
+
+    </div>
+</div>
+
+
+    <div class="row">
+        <div class="panel panel-default relative">
+    <div class="panel-heading relative">
+        <h3 class="panel-title">News</h3>
+    </div>
+    <div class="panel-body">
+
+
+
+
+        <div ng-repeat="notification in vm.notifications | orderBy:'-Created'">
+            <div class="well-sm">
+                <h4>{{notification.Title}} <span class="badge">{{timeSince(notification.Created)}} Ago</span> <span class="badge"  ng-if="notification.CreatedByPlayerId != '00000000-0000-0000-0000-000000000000'">By: <a href="#" ui-sref="userView({id:notification.CreatedByPlayerId})">{{notification.CreatedByPlayerCallsign}}</a></span></h4>
+                <div>
+                    <!--{{notification.Description}}-->
+                    <ul class="list-unstyled" ng-repeat="s in notification.Description.split('\n')">
+                        <li ng-if="$index == 0">
+                            {{s}}
+                        </li>
+                        <li ng-if="$index != 0" style="margin-left:10px;">
+                            {{s}}
+                        </li>
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-link" ng-click="deleteNotification(notification.Id)" style="padding:0;margin:0;font-size:0.8em;">Delete</button>
+            </div>
+            <hr />
+        </div>
+
+        <div style="text-align:center; font-size:2em;">
+            <i class="fa fa-refresh fa-spin" ng-if="vm.isLoadingNotifications"></i>
+        </div>
+
+
+
+
+
+
+    </div>
+</div>
+        
+    </div>
+
+
+
+    
+
+    </div> <!-- /container -->
