@@ -1,9 +1,13 @@
-angular.module('pb').controller('userViewCtrl', ['$scope', 'UserFactory', '$http', '$uibModal', 'Notification', '$stateParams', function ($scope, UserFactory, $http, $modal, Notification, $stateParams) {
-    //console.log('userview ctrl');
+angular.module('pb').controller('userViewCtrl', ['$scope', 'UserFactory', '$http', '$uibModal', 'Notification', '$stateParams', 'OidcManager','titleFactory', function ($scope, UserFactory, $http, $modal, Notification, $stateParams, OidcManager, titleFactory) {
 
-    $scope.foundUser = true;
+    titleFactory.set('View Player');
 
-    $scope.user = null;
+    $scope.vm = {
+        isLoading: false,
+        wasUserFound: false,
+        user: null,
+        playerId: $stateParams.id
+    };
 
     function loadUser () {
         $scope.user = null;
@@ -26,13 +30,19 @@ angular.module('pb').controller('userViewCtrl', ['$scope', 'UserFactory', '$http
         if ( !validId )
             return;
 
-        //UserFactory.loadWithCurrentId().then(function (response){
+        $scope.vm.isLoading = true;
         fn($stateParams.id).then(function (response) {
 
-            response.data.Data.Modified = parseInt(response.data.Data.Modified.substr(6));
-            response.data.Data.Created = parseInt(response.data.Data.Created.substr(6));
+            $scope.vm.isLoading = false;
 
-            $scope.user = response.data.Data;
+            // Didn't find a user
+            if ( response == void 0 ){
+                $scope.vm.wasUserFound = false;
+                return;
+            }
+
+            $scope.vm.wasUserFound = true;
+            $scope.vm.user = response.data;
 
         });
     }
@@ -40,13 +50,12 @@ angular.module('pb').controller('userViewCtrl', ['$scope', 'UserFactory', '$http
     $scope.loadUser = loadUser;
 
     $scope.deleteTeam = function (userTeamId) {
-        console.log('delte team: ', userTeamId);
 
         var result = confirm('Are you sure?');
 
         if (result) {
-            $http.get('Home/RemoveTeam?userTeamId=' + userTeamId).then(function (response) {
-                console.log('data response: ', response.data);
+
+            UserFactory.removeTeam(userTeamId).then(function(){
                 $scope.loadUser();
             });
 
@@ -68,22 +77,21 @@ angular.module('pb').controller('userViewCtrl', ['$scope', 'UserFactory', '$http
                     return $scope.user;
                 }
             },
-            controller: function ($scope, $modalInstance, user, $http) {
+            controller: function ($scope, $uibModalInstance, user, $http) {
                 $scope.user = user;
                 $scope.isLoading = false;
 
                 $scope.ok = function () {
                     $scope.isLoading = true;
 
-                    $http.post('User/Update', $scope.user).then(function (response) {
-                        console.log(response);
-                        $modalInstance.dismiss('cancel');
+                    UserFactory.update($scope.user).then(function(){
+                        $uibModalInstance.dismiss('cancel');
                         loadUser();
-                    });
+                    })
                 };
 
                 $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
+                    $uibModalInstance.dismiss('cancel');
                 };
             }
         })
@@ -97,7 +105,7 @@ angular.module('pb').controller('userViewCtrl', ['$scope', 'UserFactory', '$http
                     return $scope.user;
                 }
             },
-            controller: function ($scope, $modalInstance, user, $http){
+            controller: function ($scope, $uibModalInstance, user, $http){
                 $scope.user = user;
                 $scope.password = null;
                 $scope.retype = null;
@@ -106,21 +114,14 @@ angular.module('pb').controller('userViewCtrl', ['$scope', 'UserFactory', '$http
                 $scope.ok = function () {
                     $scope.isLoading = true;
 
-                    //$http.post('User/Update', $scope.user).then(function (response) {
-                    //    console.log(response);
-                    //    $modalInstance.dismiss('cancel');
-                    //    loadUser();
-                    //});
-
-                    $http.get('User/SetPassword?userId=' + $scope.user.Id + '&password=' + $scope.password).then(function (response) {
-                        console.log(response);
-                        $modalInstance.dismiss('cancel');
+                    UserFactory.setPassword($scope.user.Id, $scope.password).then(function() {
+                        $uibModalInstance.dismiss('cancel');
                         loadUser();
                     });
                 };
 
                 $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
+                    $uibModalInstance.dismiss('cancel');
                 };
             }
         })
@@ -130,38 +131,21 @@ angular.module('pb').controller('userViewCtrl', ['$scope', 'UserFactory', '$http
         console.log('default team', team);
         Notification.primary('Saving...');
 
-        //angular.forEach($scope.teams, function (team) {
-        //    team.canAddOrRemove = false;
-        //});
-
-        //angular.forEach($scope.teams, function (team) {
-        //    if (team.Id != team.Id) {
-        //        team.IsDefault = false;
-        //    }
-        //});
-
-        $http.get('Home/SetDefaultTeam?userId=' + _app.userId + '&teamId=' + team.TeamId).then(function (response) {
-
+        UserFactory.setDefaultTeam(OidcManager.profile.sub, team.TeamId).then(function () {
             Notification.clearAll();
             Notification.success({ message: 'Success', delay: 2000 });
 
-            //angular.forEach($scope.teams, function (team) {
-            //    team.canAddOrRemove = true;
-            //});
-            //$scope.loadTeams();
             $scope.loadUser();
-
-        });
+        })
     };
 
     $scope.loadUser();
 
-    $scope.$watch(function () {
-        return $scope.user;
-    }, function (nv, ov) {
-        if (!angular.equals(nv, ov)) {
-
+    $scope.$watch('user', function (nv,ov) {
+        if (nv != void 0 && nv.Callsign != void 0) {
+            titleFactory.set('Player: ' + nv.Callsign);
         }
-    }, true);
+
+    });
 
 }]);

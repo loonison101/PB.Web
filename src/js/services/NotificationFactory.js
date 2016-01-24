@@ -2,15 +2,15 @@
 
     function getHomepageNotifications() {
         //return $http.get('Notification/HomepageNotifications');
-        return $http.get(config.apiUrl + 'v1/HomePageNotifications');
+        return $http.get(config.apiUrl + 'v1/Notification/HomePageNotifications');
     }
 
     function create (notification) {
-        return $http.post('Notification/Create', notification);
+        return $http.post(config.apiUrl + 'v1/Notification/Create', notification);
     }
 
     function remove (notificationId){
-        return $http.get('Notification/Delete?id=' + notificationId);
+        return $http.get(config.apiUrl + 'v1/Notification/Delete?id=' + notificationId);
     }
 
 

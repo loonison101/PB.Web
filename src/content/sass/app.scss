@@ -13,8 +13,8 @@
 }
 
 .profile-image {
-  height: 30px;
-  width:30px;
+  height: 50px;
+  width:50px;
 }
 
 .text-right {
@@ -35,6 +35,10 @@
 
 .block {
   display: inline-block;
+}
+
+.inline {
+  display:inline;
 }
 
 .red {
@@ -157,6 +161,9 @@
 .bigger-2 {
   font-size:2em;
 }
+.bigger-3 {
+  font-size:3em;
+}
 
 .editable-buttons {
   .btn {
@@ -188,4 +195,14 @@
 
 .no-wrap {
   white-space:nowrap;
+}
+
+.padding-none {
+  padding: 0px;
+}
+
+.vertical-middle {
+    td {
+      vertical-align: middle !important;
+    }
 }

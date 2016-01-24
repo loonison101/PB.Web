@@ -1,22 +1,17 @@
-angular.module('pb').controller('teamCtrl', ['$scope', '$stateParams', '$http', '$timeout', '$uibModal', 'Upload', '$stateParams', function ($scope, $stateParams, $http, $timeout, $modal, Upload, $stateParams) {
-    console.log('loadthis team: ', $stateParams.id);
+angular.module('pb').controller('teamCtrl', ['$scope', '$stateParams', '$http', '$timeout', '$uibModal', 'Upload', '$stateParams','TeamFactory','OidcManager', 'config','RankFactory','titleFactory', function ($scope, $stateParams, $http, $timeout, $modal, Upload, $stateParams, TeamFactory, OidcManager, config, RankFactory, titleFactory) {
+
+    titleFactory.set('View Team');
 
     $scope.team = null;
-
+    $scope.feeds = [];
 
     function loadTeam () {
-
-        $http.get('Team/ById?id=' + $stateParams.id).then(function (response) {
-            console.log('got team: ', response.data);
-            response.data.Data.Modified = parseInt(response.data.Data.Modified.substr(6));
-            response.data.Data.Created = parseInt(response.data.Data.Created.substr(6))
-            $scope.team = response.data.Data;
+        TeamFactory.load($stateParams.id).then(function(response){
+            $scope.team = response.data;
         });
     }
 
     loadTeam();
-
-    $scope.feeds = [];
 
     //$timeout(function () {
     //    console.log('execute feed request');
@@ -28,12 +23,10 @@ angular.module('pb').controller('teamCtrl', ['$scope', '$stateParams', '$http', 
     //    });
     //}, 5000);
 
-
     $scope.createRank = function () {
-        console.log('create rank');
         $modal.open({
             templateUrl: 'addRank.html',
-            controller: function ($scope, $modalInstance, $http, Upload, Notification, $stateParams) {
+            controller: function ($scope, $uibModalInstance, $http, Upload, Notification, $stateParams, RankFactory, config) {
 
                 $scope.file = null;
                 $scope.isUploadingImage = false;
@@ -49,19 +42,18 @@ angular.module('pb').controller('teamCtrl', ['$scope', '$stateParams', '$http', 
                 };
 
                 $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
+                    $uibModalInstance.dismiss('cancel');
                 };
 
                 $scope.ok = function () {
                     $scope.isLoading = true;
 
-                    $http.post('Rank/Create', $scope.rank).then(function (response) {
+                    RankFactory.create($scope.rank).then(function(){
                         $scope.isLoading = false;
-                        $modalInstance.dismiss('cancel');
+                        $uibModalInstance.dismiss('cancel');
                         loadTeam();
                         Notification.success('Created!');
                     });
-
                 };
 
                 // upload on file select or drop
@@ -69,7 +61,7 @@ angular.module('pb').controller('teamCtrl', ['$scope', '$stateParams', '$http', 
                     $scope.isLoadingImage = true;
 
                     Upload.upload({
-                        url: 'Image/Upload',
+                        url: config.apiUrl + 'v1/Image/Upload',
                         data: { file: file, 'username': $scope.username }
                     }).then(function (resp) {
 
@@ -108,17 +100,16 @@ angular.module('pb').controller('teamCtrl', ['$scope', '$stateParams', '$http', 
     }
 
     $scope.deleteRank = function ( rank ) {
-        console.log('delete me: ', rank);
-
         if (window.confirm('Are you sure?')) {
-            $http.get('Rank/Delete?id=' + rank.Id).then(function (response) {
-                console.log(response);
+            RankFactory.remove(rank.Id).then(function(){
                 loadTeam();
             });
         }
     };
 
     $scope.timeSince = function(date) {
+
+        return moment(date).startOf('hour').fromNow();
 
         var seconds = Math.floor((new Date() - date) / 1000);
 
@@ -149,8 +140,12 @@ angular.module('pb').controller('teamCtrl', ['$scope', '$stateParams', '$http', 
     $scope.changeRank = function ( rank ) {
         console.log('change rank', rank);
 
-        $http.get('Rank/SetDefaultRank?userId=' + _app.userId + '&rankId=' + rank.Id + '&teamId=' + rank.TeamId).then(function (response) {
-            console.log(response);
+        //$http.get('Rank/SetDefaultRank?userId=' + OidcManager.profile.sub + '&rankId=' + rank.Id + '&teamId=' + rank.TeamId).then(function (response) {
+        //    console.log(response);
+        //    loadTeam();
+        //});
+
+        RankFactory.setDefaultRank(rank.Id, rank.TeamId).then(function (){
             loadTeam();
         });
     };
@@ -159,21 +154,17 @@ angular.module('pb').controller('teamCtrl', ['$scope', '$stateParams', '$http', 
         console.log('delete user', user);
 
         if (window.confirm('Are you sure?')) {
-            $http.get('Team/RemoveUser?userId=' + user.Id + '&teamId=' + $stateParams.id).then(function (response) {
-                console.log(response);
-
+            TeamFactory.removeUser($stateParams.id).then(function () {
                 loadTeam();
             });
         }
-
     };
 
     $scope.editTeam = function () {
-        console.log('edit team');
 
         $modal.open({
             templateUrl: 'editTeam.html',
-            controller: function ($scope, $modalInstance, $http, team, Upload, Notification) {
+            controller: function ($scope, $uibModalInstance, $http, team, Upload, Notification, TeamFactory, config) {
                 $scope.team = team;
                 $scope.isLoading = false;
                 $scope.isUploadingImage = false;
@@ -181,26 +172,24 @@ angular.module('pb').controller('teamCtrl', ['$scope', '$stateParams', '$http', 
                 $scope.ok = function () {
                     $scope.isLoading = true;
 
-                    $http.post('Team/Update', $scope.team).then( function ( response ) {
+                    TeamFactory.update(team).then(function (){
                         $scope.isLoading = false;
-                       console.log('team edit eesponse: ', response);
 
-                        $modalInstance.dismiss('cancel');
+                        $uibModalInstance.dismiss('cancel');
 
                         Notification.success('Updated!');
-
                     });
                 };
 
                 $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
+                    $uibModalInstance.dismiss('cancel');
                 };
 
                 $scope.upload = function ( file ) {
                     $scope.isLoadingImage = true;
 
                     Upload.upload({
-                        url: 'Image/Upload',
+                        url: config.apiUrl + 'v1/Image/Upload',
                         data: { file: file }
                     }).then( function (resp) {
                         $scope.isLoadingImage = false;
@@ -221,4 +210,9 @@ angular.module('pb').controller('teamCtrl', ['$scope', '$stateParams', '$http', 
         })
     };
 
+    $scope.$watch('team', function(nv) {
+        if (nv != void 0 && nv.Name != void 0) {
+            titleFactory.set('Team: ' + nv.Name);
+        }
+    });
 }]);

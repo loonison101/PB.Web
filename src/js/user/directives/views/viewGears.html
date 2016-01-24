@@ -1,4 +1,4 @@
-<div class="col-md-8 col-xs-8" style="text-align:left;padding-top:3%;height:100px;white-space:nowrap;overflow-y:hidden;">
+<div class="col-md-10 col-xs-9" style="text-align:left;padding-top:3%;height:100px;white-space:nowrap;overflow-y:hidden;">
 
     <!--<div ng-if="editing" style="width:50px;height:50px;display:inline-block;vertical-align: top;margin-top:10px;margin-right:10px;">-->
     <div style="display:inline-block;vertical-align: top;margin-top:10px;margin-right:10px;">
@@ -7,12 +7,14 @@
 
     <div ng-repeat="gear in gears" style="display:inline-block;margin-right:10px;" ng-if="gear.Section == section">
         <div style="display:inline-block">
-            <img ng-src="{{gear.ImageUrl}}" class="img-rounded" style="margin-right:5px;height:60px;width:60px;background:white;margin-top:-40px;"/>
+            <img ng-show="gear.ImageUrl" ng-src="{{gear.ImageUrl}}" class="img-rounded" style="margin-right:5px;height:60px;width:60px;background:white;margin-top:-40px;"/>
+            <div ng-show="!gear.ImageUrl" class="inline" style="margin-right:5px;height:60px;width:60px;font-size:3em;"><i class="fa fa-image"></i></div>
+
             <div style="display:inline-block;">
                 <div>{{gear.Name}} <span class="badge" title="Has {{gear.Quantity}}">{{gear.Quantity}}</span></div>
                 <div ng-if="gear.Manufacturer">{{gear.Manufacturer}}</div>
                 <div ng-if="!gear.Manufacturer" style="color:grey;"><i>None</i></div>
-                <div>{{prettyDate(gear.Created)}}</div>
+                <div>{{gear.Created | prettyDate}}</div>
             </div>
         </div>
         <div style="display:inline-block;vertical-align:top;margin-left:5px;">

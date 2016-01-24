@@ -1,15 +1,15 @@
-angular.module('pb').factory('GearFactory', ['$http', function ( $http ) {
+angular.module('pb').factory('GearFactory', ['$http','config', function ( $http, config ) {
 
     function update ( gear ) {
-        return $http.post('Gear/Update', gear);
+        return $http.put(config.apiUrl + 'v1/Gear/Update', gear);
     }
 
     function create ( gear ) {
-        return $http.post('Gear/Create', gear);
+        return $http.post(config.apiUrl + 'v1/Gear/Create', gear);
     }
 
     function remove ( id ) {
-        return $http.get('Gear/Delete?id=' + id);
+        return $http.get(config.apiUrl + 'v1/Gear/Delete?id=' + id);
     }
 
     return {

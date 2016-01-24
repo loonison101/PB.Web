@@ -1,23 +1,56 @@
-angular.module('pb').factory('UserFactory', ['$http', '$window', function ($http, $window) {
-
-    var _data = {
-        //userId: $window._app.userId
-        userId: 'dont use me, use auth manger'
-    };
+angular.module('pb').factory('UserFactory', ['$http', '$window', 'config','OidcManager', function ($http, $window, config, OidcManager) {
 
     function loadUser ( userId ) {
-        return $http.get('User/ById?id=' + userId);
+        return $http.get(config.apiUrl +  'v1/Player/ById?id=' + userId);
     }
 
     function loadWithCurrentId (){
-        return $http.get('User/ById?id=' + _data.userId);
+        if (OidcManager.profile == void 0) OidcManager.redirectForToken();
+
+        return $http.get(config.apiUrl + 'v1/Player/ById?id=' + OidcManager.profile.sub);
     }
 
-    //console.log('user id', _data.userId);
+    function getAll() {
+        return $http.get(config.apiUrl + 'v1/Player');
+    }
+
+    function remove ( id ) {
+        return $http.get(config.apiUrl + 'v1/Player/Delete?id=' + id);
+    }
+
+    function removeTeam ( userTeamId ) {
+        return $http.get(config.apiUrl + 'v1/Player/RemoveTeam?userTeamId=' + userTeamId);
+    }
+
+    function update ( player ) {
+        //return $http.put(config.apiUrl + 'v1/Player/Update?id=' + player.Id, player);
+        //return $http({
+        //    method: 'POST',
+        //    url: config.apiUrl + 'v1/Player/Update',//?id=' + player.Id,
+        //    //data: JSON.stringify({
+        //    //    value: player
+        //    //})
+        //    data: player
+        //});
+        return $http.put(config.apiUrl + 'v1/Player/Update', player);
+    }
+
+    function setPassword ( userId, password ) {
+        return $http.get(config.apiUrl + 'v1/Player/SetPassword?userId=' + userId + '&password=' + password);
+    }
+
+    function setDefaultTeam ( userId, teamId ) {
+        return $http.get(config.apiUrl + 'v1/Player/SetDefaultTeam?userId=' + userId + '&teamId=' + teamId);
+    }
 
     return {
         load: loadUser,
         loadWithCurrentId: loadWithCurrentId,
-        userId: _data.userId
+        getAll: getAll,
+        remove: remove,
+        removeTeam: removeTeam,
+        update: update,
+        setPassword: setPassword,
+        setDefaultTeam: setDefaultTeam
     }
 }]);

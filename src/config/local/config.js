@@ -8,8 +8,9 @@
 
 angular.module('pb').factory('config', [function () {
     return {
-        baseUrl: 'http://localhost:63342/PB.Web/',
+        baseUrl: 'http://localhost:63342/PB.Web/src/',
         apiUrl: 'http://localhost/pb.api/',
-        version: '1.2'
+        version: '1.2',
+        appName: 'PB'
     }
 }]);

@@ -1,4 +1,7 @@
-angular.module('pb').controller('playersCtrl', [ '$scope', '$http', 'Notification', function ( $scope, $http, Notification ) {
+angular.module('pb').controller('playersCtrl', [ '$scope', '$http', 'Notification', 'UserFactory','titleFactory', function ( $scope, $http, Notification, UserFactory, titleFactory ) {
+
+    titleFactory.set('View Players')
+
     $scope.model = {
         players: [],
         isLoading: false
@@ -6,10 +9,11 @@ angular.module('pb').controller('playersCtrl', [ '$scope', '$http', 'Notificatio
 
     function loadPlayers () {
         $scope.model.isLoading = true;
-        $http.get('User/Get').then(function ( response ) {
+
+        UserFactory.getAll().then(function (response) {
             $scope.model.isLoading = false;
 
-            $scope.model.players = response.data.Data;
+            $scope.model.players = response.data;
         });
 
     }
@@ -19,19 +23,15 @@ angular.module('pb').controller('playersCtrl', [ '$scope', '$http', 'Notificatio
     $scope.loadPlayers();
 
     $scope.deletePlayer = function ( player ) {
-        console.log('delte player', player);
 
         if ( confirm('Are you sure?') ) {
-            $http.get('User/Delete?id=' + player.Id).then(function ( response ) {
-                //$scope.model.players.splice(player);
 
+            UserFactory.remove(player.Id).then(function () {
                 $scope.model.players.splice($scope.model.players.indexOf(player), 1);
 
                 Notification.success('Player Deleted!');
             });
         }
-
-
     };
 
 }]);

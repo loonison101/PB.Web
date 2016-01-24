@@ -42,14 +42,14 @@
                 <div class="panel-body">
                     <form class="form-horizontal" ng-if="team != null">
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
+                            <label for="" class="col-sm-2 text-right">Name</label>
                             <div class="col-sm-10">
                                 {{ team.Name}}
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="inputPassword3" class="col-sm-2 control-label">Description</label>
+                            <label for="" class="col-sm-2 text-right">Description</label>
                             <div class="col-sm-10">
                                 {{team.Description}}
                             </div>
@@ -58,10 +58,10 @@
 
 
                         <div class="form-group">
-                            <label for="inputPassword3" class="col-sm-2 control-label">Other</label>
+                            <label for="" class="col-sm-2 text-right">Other</label>
                             <div class="col-sm-10">
-                                <div>Date Created: {{ timeSince(team.Created)}} ago</div>
-                                <div>Date Modified: {{ timeSince(team.Modified)}} ago</div>
+                                <div>Created {{ team.Created | prettyDate}}</div>
+                                <div>Modified {{ team.Modified | prettyDate }}</div>
                             </div>
                         </div>
 
@@ -140,21 +140,23 @@
                         <table class="table table-striped">
                             <thead>
                             <tr>
-                                <th>Image</th>
+                                <!--<th>Image</th>-->
                                 <th>Call Sign</th>
                                 <th>Name</th>
                                 <th style="text-align: center;">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="user in team.Users">
-                                <td>
-                                    <img class="img-responsive max-med-image" ng-src="{{user.ImageUrl}}"/>
-                                </td>
-                                <td>{{user.Callsign}}</td>
-                                <td>
-                                    <button class="btn btn-link" ui-sref="userView({id: user.Id})">{{user.Email}}</button>
-                                </td>
+                            <tr ng-repeat="user in team.Users" class="vertical-middle">
+                                <!--<td>-->
+                                    <!--<img class="img-responsive max-med-image" ng-src="{{user.ImageUrl}}"/>-->
+                                <!--</td>-->
+                                <!--<td>{{user.Callsign}}</td>-->
+                                <td><button class="btn btn-link" ui-sref="userView({id: user.Id})">{{user.Callsign}}</button></td>
+                                <td>{{user.FirstName}} {{user.LastName}}</td>
+                                <!--<td>-->
+                                    <!--<button class="btn btn-link" ui-sref="userView({id: user.Id})">{{user.Email}}</button>-->
+                                <!--</td>-->
                                 <td style="text-align: center;">
                                     <button class="btn btn-link" ng-click="deleteUser(user)"><i class="fa fa-times pointer" style="font-size: 1.5em;"></i></button>
                                 </td>
@@ -189,7 +191,7 @@
                 <label class="col-lg-2 control-label">Image URL</label>
                 <div class="col-lg-10">
                     <input type="text" class="form-control" autofocus ng-model="rank.ImageUrl" />
-                    <p class="help-block">If you do not have a url, then <a href="#" ng-init="hideImageUpload = true" ng-click="hideImageUpload = !hideImageUpload">upload image?</a></p>
+                    <!--<p class="help-block">If you do not have a url, then <a href="#" ng-init="hideImageUpload = true" ng-click="hideImageUpload = !hideImageUpload">upload image?</a></p>-->
                     <div collapse="hideImageUpload" >
 
                         <!--<span class="btn btn-primary btn-file">-->
@@ -286,13 +288,13 @@
                 <label class="col-lg-2 control-label">Image URL</label>
                 <div class="col-lg-10">
                     <input type="text" class="form-control" autofocus ng-model="team.ImageUrl" ng-model-options="{ debounce: 1000 }"/>
-                    <p class="help-block">If you do not have a url, then <a href="#" ng-init="hideImageUpload = true" ng-click="hideImageUpload = !hideImageUpload">upload image?</a></p>
-                    <div collapse="hideImageUpload" >
-                        <button class="button btn btn-primary" ngf-select="upload($file)" accept="image/*" ngf-max-size="10MB" ng-disabled="isUploadingImage">
-                            <span ng-show="!isUploadingImage">Upload Image</span>
-                            <span ng-show="isUploadingImage">Uploading...</span>
-                        </button>
-                    </div>
+                    <!--<p class="help-block">If you do not have a url, then <a href="#" ng-init="hideImageUpload = true" ng-click="hideImageUpload = !hideImageUpload">upload image?</a></p>-->
+                    <!--<div collapse="hideImageUpload" >-->
+                        <!--<button class="button btn btn-primary" ngf-select="upload($file)" accept="image/*" ngf-max-size="10MB" ng-disabled="isUploadingImage">-->
+                            <!--<span ng-show="!isUploadingImage">Upload Image</span>-->
+                            <!--<span ng-show="isUploadingImage">Uploading...</span>-->
+                        <!--</button>-->
+                    <!--</div>-->
                 </div>
             </div>
             <div class="form-group">

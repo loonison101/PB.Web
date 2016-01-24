@@ -1,10 +1,10 @@
-var app = angular.module('pb', ['ui.router', 'ui.bootstrap', 'ui-notification', 'ngTouch', 'ngFileUpload', 'xeditable', 'angularUUID2']);
+var app = angular.module('pb', ['ui.router', 'ui.bootstrap', 'ui-notification', 'ngTouch', 'ngFileUpload', 'xeditable', 'angularUUID2', 'templates', 'pusher-angular']);
 
 angular.isGuid = angular.isGuid || function ( guid ) {
         return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(guid);
     };
 
-app.config(['$stateProvider', '$urlRouterProvider', 'NotificationProvider', '$httpProvider', function ($stateProvider, $urlRouterProvider, NotificationProvider, $httpProvider) {
+app.config(['$stateProvider', '$urlRouterProvider', 'NotificationProvider', '$httpProvider','OidcManagerProvider', function ($stateProvider, $urlRouterProvider, NotificationProvider, $httpProvider, OidcManagerProvider) {
 
     function registerStates () {
         $stateProvider
@@ -85,25 +85,41 @@ app.config(['$stateProvider', '$urlRouterProvider', 'NotificationProvider', '$ht
     });
 
     // Need this to tell MVC that we make AJAX requests, jQuery does this by default, as does XMLHTTPREQUEST
-    $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    //$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
     $httpProvider.interceptors.push(['$q','$injector', function($q, $injector) {
         return {
-            response: function(response) {
+            //response: function(response) {
+            //    return response;
+            //},
+            responseError: function ( response ) {
+                if ( response.status === 500 ) {
+                    var Notification = $injector.get('Notification');
 
-                var Notification = $injector.get('Notification');
-
-                if ( response.data.HasErrors === true ) {
                     Notification.error({
                         title: 'Error!',
-                        message: response.data.CombinedErrors,
+                        message: 'Error!',
+                        delay: 1000*15
+                    })
+                } else if (response.status === -1) {
+                    var Notification = $injector.get('Notification');
+
+                    Notification.error({
+                        title: 'Error!',
+                        message: 'Authentication server down, please notify lanekatris@gmail.com',
+                        delay: 1000*15
+                    })
+                } else if ( response.status === 401 ) {
+                    var Notification = $injector.get('Notification');
+
+                    Notification.error({
+                        title: 'Session Expired!',
+                        message: 'Redirecting...',
                         delay: 1000*15
                     });
 
-                    console.error('Errored', response);
+                    window.location.reload();
                 }
-
-                return response;
             }
         }
     }]);
@@ -120,6 +136,49 @@ app.config(['$stateProvider', '$urlRouterProvider', 'NotificationProvider', '$ht
         }
     }]);
 
+    //$httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+    //
+    ///**
+    // * The workhorse; converts an object to x-www-form-urlencoded serialization.
+    // * @param {Object} obj
+    // * @return {String}
+    // */
+    //var param = function(obj) {
+    //    var query = '', name, value, fullSubName, subName, subValue, innerObj, i;
+    //
+    //    for(name in obj) {
+    //        value = obj[name];
+    //
+    //        if(value instanceof Array) {
+    //            for(i=0; i<value.length; ++i) {
+    //                subValue = value[i];
+    //                fullSubName = name + '[' + i + ']';
+    //                innerObj = {};
+    //                innerObj[fullSubName] = subValue;
+    //                query += param(innerObj) + '&';
+    //            }
+    //        }
+    //        else if(value instanceof Object) {
+    //            for(subName in value) {
+    //                subValue = value[subName];
+    //                fullSubName = name + '[' + subName + ']';
+    //                innerObj = {};
+    //                innerObj[fullSubName] = subValue;
+    //                query += param(innerObj) + '&';
+    //            }
+    //        }
+    //        else if(value !== undefined && value !== null)
+    //            query += encodeURIComponent(name) + '=' + encodeURIComponent(value) + '&';
+    //    }
+    //
+    //    return query.length ? query.substr(0, query.length - 1) : query;
+    //};
+    //
+    //// Override $http service's default transformRequest
+    //$httpProvider.defaults.transformRequest = [function(data) {
+    //    return angular.isObject(data) && String(data) !== '[object File]' ? param(data) : data;
+    //}];
+
     console.log(
         '_____  ____\n' +
         '|  __ \\|  _ \\\n' +
@@ -129,6 +188,14 @@ app.config(['$stateProvider', '$urlRouterProvider', 'NotificationProvider', '$ht
         '|_|    |____/\n'
 
     );
+
+    if (OidcManagerProvider.$get().expired){
+        OidcManagerProvider.$get().redirectForToken();
+    }
+
+    window.pusherClient = new Pusher('8e4a480bb5dc1a9a463b');
+
+
 }]);
 
 app.run(function(editableOptions, editableThemes) {

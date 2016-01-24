@@ -50,7 +50,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="team in teams" ng-init="team.canAddOrRemove = true">
+                                <tr ng-repeat="team in teams" ng-init="team.canAddOrRemove = true" class="vertical-middle">
                                     <td class="center" style="text-align:center;">
                                         <input type="checkbox" ng-model="team.IsUserInTeam" style="height:2em;width:2em;" ng-change="addOrRemoveTeam(team)" ng-disabled="!team.canAddOrRemove"/>
                                     </td>
@@ -58,7 +58,8 @@
                                         <input type="radio" name="teams" ng-value="true" ng-model="team.IsDefault" style="height:2em;width:2em;" ng-change="changeDefaultTeam(team)" ng-disabled="!team.canAddOrRemove || !team.IsUserInTeam" />
                                     </td>
                                     <td>
-                                        <img ng-src="{{team.ImageUrl}}" class="profile-image"/>
+                                        <img ng-show="team.ImageUrl" ng-src="{{team.ImageUrl}}" class="profile-image"/>
+                                        <div ng-if="!team.ImageUrl" class="inline profile-image bigger-3"><i class="fa fa-image"></i></div>
                                     </td>
                                     <td>
                                         <div style="font-weight:bold;"><a href="#" ui-sref="teamView({id: team.Id})">{{team.Name}}</a></div>

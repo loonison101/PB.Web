@@ -22,175 +22,14 @@ angular.module('pb').directive('viewLoadoutsOverview', ['$timeout', '$uibModal',
 
                 LoadoutFactory.byPlayerId($scope.playerId).then(function (response) {
                     $scope.vm.isLoadingLoadouts = false;
-
-
-                    $scope.vm.loadouts = response.data.Data;
-
-                    angular.forEach($scope.vm.loadouts, function (loadout) {
-                        loadout.Created = new Date(parseInt(loadout.Created.substr(6)));
-                    });
-
-                    console.log('responsefrom loadouts', response.data.Data);
-
-                    //$scope.vm.loadouts.push(
-                    //        {
-                    //            Id: 'aaa',
-                    //            ImageUrl: 'Content/Images/loadout.jpg',
-                    //            Name: 'Mag fed primary setup',
-                    //            Gears: [
-                    //                { // Gear
-                    //                    Name: 'Headband',
-                    //                    Manufacturer: 'GI Sports',
-                    //                    Section: 1,
-                    //                    Sequence: 1,
-                    //                    ImageUrl: 'http://www.ansgear.com/v/vspfiles/photos/EXALTHEADBANDTIGERDIGITAL-2T.jpg',
-                    //                    Bought: new Date(),
-                    //                    Quantity: 1
-                    //                },
-                    //                {
-                    //                    Name: 'Sly Mask',
-                    //                    Manufacturer: 'Sly',
-                    //                    Section: 1,
-                    //                    Sequence: 2,
-                    //                    ImageUrl: 'http://www.ansgear.com/v/vspfiles/photos/SLYPAINTBALLMASKPROFIT-BLACK-2T.jpg',
-                    //                    Bought: new Date(),
-                    //                    Quantity: 1
-                    //                },
-                    //                {
-                    //                    Name: 'Ball Cap',
-                    //                    Manufacturer: '',
-                    //                    Section: 1,
-                    //                    Sequence: 2,
-                    //                    ImageUrl: 'http://ecx.images-amazon.com/images/I/51E5%2BChuoqL._SY355_.jpg',
-                    //                    Bought: new Date(),
-                    //                    Quantity: 1
-                    //                },
-                    //                {
-                    //                    Name: 'Battle Shirt',
-                    //                    Manufacturer: 'eBay',
-                    //                    Section: 2,
-                    //                    Sequence: 1,
-                    //                    ImageUrl: 'http://www.hueys.co.uk/WebRoot/Store/Shops/es151784/519F/6315/D441/732A/F0AF/0A0F/1116/AC3B/mc4.jpg',
-                    //                    Bought: new Date(),
-                    //                    Quantity: 1
-                    //                },
-                    //                {
-                    //                    Name: 'Plate Carrier',
-                    //                    Manufacturer: 'Condor',
-                    //                    Section: 2,
-                    //                    Sequence: 2,
-                    //                    ImageUrl: 'http://www.condoroutdoor.com/images/products/detail/MOPC_003F_2014_v02.png',
-                    //                    Bought: new Date(),
-                    //                    Quantity: 1
-                    //                },
-                    //                //
-                    //                {
-                    //                    Name: 'Forearm Pads',
-                    //                    Manufacturer: 'Exalt',
-                    //                    Section: 3,
-                    //                    Sequence: 1,
-                    //                    ImageUrl: 'http://cdn3.volusion.com/xrkzm.gkync/v/vspfiles/photos/Elbow-2.jpg?1376960723',
-                    //                    Bought: new Date(),
-                    //                    Quantity: 1
-                    //                },
-                    //                //
-                    //                {
-                    //                    Name: 'Fingerless Gloves',
-                    //                    Manufacturer: 'Planet Eclipse',
-                    //                    Section: 4,
-                    //                    Sequence: 2,
-                    //                    ImageUrl: 'http://www.ansgear.com/v/vspfiles/photos/PLANET2011GAUNTLETGLOVES-2.jpg',
-                    //                    Bought: new Date(),
-                    //                    Quantity: 1
-                    //                }
-                    //            ]
-                    //        });
+                    $scope.vm.loadouts = response.data;
                 });
-
-                //$timeout(function () {
-                //    $scope.vm.isLoadingLoadouts = false;
-                //    $scope.vm.loadouts.push(
-                //        {
-                //            Id: 'aaa',
-                //            ImageUrl: 'Content/Images/loadout.jpg',
-                //            Name: 'Mag fed primary setup',
-                //            Gears: [
-                //                { // Gear
-                //                    Name: 'Headband',
-                //                    Manufacturer: 'GI Sports',
-                //                    Section: 'Head',
-                //                    Sequence: 1,
-                //                    ImageUrl: 'http://www.ansgear.com/v/vspfiles/photos/EXALTHEADBANDTIGERDIGITAL-2T.jpg',
-                //                    Bought: new Date(),
-                //                    Quantity: 1
-                //                },
-                //                {
-                //                    Name: 'Sly Mask',
-                //                    Manufacturer: 'Sly',
-                //                    Section: 'Head',
-                //                    Sequence: 2,
-                //                    ImageUrl: 'http://www.ansgear.com/v/vspfiles/photos/SLYPAINTBALLMASKPROFIT-BLACK-2T.jpg',
-                //                    Bought: new Date(),
-                //                    Quantity: 1
-                //                },
-                //                {
-                //                    Name: 'Ball Cap',
-                //                    Manufacturer: '',
-                //                    Section: 'Head',
-                //                    Sequence: 2,
-                //                    ImageUrl: 'http://ecx.images-amazon.com/images/I/51E5%2BChuoqL._SY355_.jpg',
-                //                    Bought: new Date(),
-                //                    Quantity: 1
-                //                },
-                //                {
-                //                    Name: 'Battle Shirt',
-                //                    Manufacturer: 'eBay',
-                //                    Section: 'Torso',
-                //                    Sequence: 1,
-                //                    ImageUrl: 'http://www.hueys.co.uk/WebRoot/Store/Shops/es151784/519F/6315/D441/732A/F0AF/0A0F/1116/AC3B/mc4.jpg',
-                //                    Bought: new Date(),
-                //                    Quantity: 1
-                //                },
-                //                {
-                //                    Name: 'Plate Carrier',
-                //                    Manufacturer: 'Condor',
-                //                    Section: 'Torso',
-                //                    Sequence: 2,
-                //                    ImageUrl: 'http://www.condoroutdoor.com/images/products/detail/MOPC_003F_2014_v02.png',
-                //                    Bought: new Date(),
-                //                    Quantity: 1
-                //                },
-                //                //
-                //                {
-                //                    Name: 'Forearm Pads',
-                //                    Manufacturer: 'Exalt',
-                //                    Section: 'Arms_Hands',
-                //                    Sequence: 1,
-                //                    ImageUrl: 'http://cdn3.volusion.com/xrkzm.gkync/v/vspfiles/photos/Elbow-2.jpg?1376960723',
-                //                    Bought: new Date(),
-                //                    Quantity: 1
-                //                },
-                //                //
-                //                {
-                //                    Name: 'Fingerless Gloves',
-                //                    Manufacturer: 'Planet Eclipse',
-                //                    Section: 'Arms_Hands',
-                //                    Sequence: 2,
-                //                    ImageUrl: 'http://www.ansgear.com/v/vspfiles/photos/PLANET2011GAUNTLETGLOVES-2.jpg',
-                //                    Bought: new Date(),
-                //                    Quantity: 1
-                //                }
-                //            ]
-                //        });
-                //    console.log('loadouts', $scope.vm.loadouts);
-                //
-                //}, 500);
             }
 
             $scope.createLoadout = function () {
                 $modal.open({
                     templateUrl: 'createLoadout.html',
-                    controller: function ($scope, playerId, $modalInstance) {
+                    controller: function ($scope, playerId, $uibModalInstance, loadLoadouts) {
                         $scope.vm = {
                             isLoading: false,
                             loadout: {
@@ -198,7 +37,7 @@ angular.module('pb').directive('viewLoadoutsOverview', ['$timeout', '$uibModal',
                             }
                         };
                         $scope.cancel = function () {
-                            $modalInstance.close('dismiss');
+                            $uibModalInstance.close('dismiss');
                         };
 
                         $scope.ok = function () {
@@ -207,7 +46,9 @@ angular.module('pb').directive('viewLoadoutsOverview', ['$timeout', '$uibModal',
                             LoadoutFactory.create($scope.vm.loadout).then(function (response) {
                                 console.log('response', response);
 
-                                window.location.reload();
+                                //window.location.reload();
+                                $uibModalInstance.close('dismiss');
+                                loadLoadouts();
                             });
 
                         };
@@ -215,6 +56,9 @@ angular.module('pb').directive('viewLoadoutsOverview', ['$timeout', '$uibModal',
                     resolve: {
                         playerId: function () {
                             return $scope.playerId;
+                        },
+                        loadLoadouts: function () {
+                            return loadLoadouts;
                         }
                     }
                 });
@@ -223,7 +67,7 @@ angular.module('pb').directive('viewLoadoutsOverview', ['$timeout', '$uibModal',
             $scope.changeLoadoutImage = function (loadout) {
                 $modal.open({
                     templateUrl: 'changeLoadoutImage.html',
-                    controller: function ($scope, $modalInstance, loadout) {
+                    controller: function ($scope, $uibModalInstance, loadout) {
 
                         var backup = angular.copy(loadout);
 
@@ -234,12 +78,12 @@ angular.module('pb').directive('viewLoadoutsOverview', ['$timeout', '$uibModal',
 
                         $scope.cancel = function () {
                             $scope.vm.loadout.ImageUrl = backup.ImageUrl;
-                            $modalInstance.close('dismiss');
+                            $uibModalInstance.close('dismiss');
                         };
 
                         $scope.ok = function () {
                             LoadoutFactory.updateImageUrl($scope.vm.loadout.Id, $scope.vm.loadout.ImageUrl).then(function () {
-                                $modalInstance.close('dismiss');
+                                $uibModalInstance.close('dismiss');
                             })
                         };
 
@@ -259,7 +103,9 @@ angular.module('pb').directive('viewLoadoutsOverview', ['$timeout', '$uibModal',
             $scope.deleteLoadout = function (loadout) {
                 if (window.confirm('Are you sure?')) {
                     LoadoutFactory.remove(loadout.Id).then(function (response) {
-                        window.location.reload();
+                        //window.location.reload();
+
+                        loadLoadouts();
                     });
                 }
             };
@@ -308,7 +154,7 @@ angular.module('pb').directive('viewGears', ['$uibModal', 'GearFactory', 'uuid2'
             $scope.addGear = function () {
                 $modal.open({
                     templateUrl: 'addGear.html',
-                    controller: function ($scope, $modalInstance, gears, section, loadoutId) {
+                    controller: function ($scope, $uibModalInstance, gears, section, loadoutId) {
                         $scope.vm = {
                             section: section,
                             isLoading: false,
@@ -327,15 +173,15 @@ angular.module('pb').directive('viewGears', ['$uibModal', 'GearFactory', 'uuid2'
                             console.log('add gear', $scope.vm.gear);
                             //gears.push($scope.vm.gear);
                             GearFactory.create($scope.vm.gear).then(function (response) {
-                                gears.push($scope.vm.gear);
-                                $modalInstance.close('dismiss');
+                                gears.unshift($scope.vm.gear);
+                                $uibModalInstance.close('dismiss');
                                 //window.location.reload();
                             });
 
                         };
 
                         $scope.cancel = function () {
-                            $modalInstance.close('dismiss');
+                            $uibModalInstance.close('dismiss');
                         }
                     },
                     resolve: {
@@ -355,7 +201,7 @@ angular.module('pb').directive('viewGears', ['$uibModal', 'GearFactory', 'uuid2'
             $scope.editGear = function (gear) {
                 $modal.open({
                     templateUrl: 'editGear.html',
-                    controller: function ($scope, $modalInstance, gear) {
+                    controller: function ($scope, $uibModalInstance, gear) {
                         console.log('gear is', gear);
 
                         $scope.vm = {
@@ -365,7 +211,7 @@ angular.module('pb').directive('viewGears', ['$uibModal', 'GearFactory', 'uuid2'
 
                         $scope.ok = function () {
                             GearFactory.update($scope.vm.gear).then(function (response) {
-                                $modalInstance.close('dismiss');
+                                $uibModalInstance.close('dismiss');
                                 //window.location.reload();
                             });
 
@@ -373,7 +219,7 @@ angular.module('pb').directive('viewGears', ['$uibModal', 'GearFactory', 'uuid2'
                         };
 
                         $scope.cancel = function () {
-                            $modalInstance.close('dismiss');
+                            $uibModalInstance.close('dismiss');
                         }
 
                     },
@@ -388,7 +234,12 @@ angular.module('pb').directive('viewGears', ['$uibModal', 'GearFactory', 'uuid2'
             $scope.removeGear = function (gear) {
                 if (window.confirm('Are you sure?')) {
                     GearFactory.remove(gear.Id).then(function (response) {
-                        window.location.reload();
+                        //window.location.reload();
+                        var index = $scope.gears.indexOf(gear);
+
+                        if (index > -1){
+                            $scope.gears.splice(index,1);
+                        }
                     })
                 }
             }

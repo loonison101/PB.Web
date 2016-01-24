@@ -18,26 +18,28 @@
                             <thead>
                             <tr>
                                 <th>Call Sign</th>
-                                <th>Email</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
+                                <!--<th>Email</th>-->
+                                <!--<th>First Name</th>-->
+                                <th>Name</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="player in model.players">
+                            <tr ng-repeat="player in model.players" class="vertical-middle">
                                 <td>
-                                    {{player.Callsign}}
+                                    <!--{{player.Callsign}}-->
+                                    <button ng-show="player.Callsign" class="btn btn-link" ui-sref="userView({id: player.Id})">{{player.Callsign}}</button>
+                                    <button ng-show="!player.Callsign" class="btn btn-link" ui-sref="userView({id: player.Id})">None</button>
                                 </td>
+                                <!--<td>-->
+                                    <!--<button class="btn btn-link" ui-sref="userView({id: player.Id})">{{player.Email}}</button>-->
+                                <!--</td>-->
                                 <td>
-                                    <button class="btn btn-link" ui-sref="userView({id: player.Id})">{{player.Email}}</button>
+                                    {{player.FirstName}} {{player.LastName}}
                                 </td>
-                                <td>
-                                    {{player.FirstName}}
-                                </td>
-                                <td>
-                                    {{player.LastName}}
-                                </td>
+                                <!--<td>-->
+                                    <!---->
+                                <!--</td>-->
                                 <td>
                                     <button class="btn btn-link" ng-click="deletePlayer(player)" title="Delete Player"><i class="fa fa-times pointer" style="font-size: 1.5em;"></i></button>
                                 </td>
@@ -45,6 +47,8 @@
                             </tbody>
                         </table>
                     </div>
+
+
 
                     <div style="text-align: center; font-size: 2em;">
                         <i class="fa fa-refresh fa-spin" ng-if="model.isLoading"></i>

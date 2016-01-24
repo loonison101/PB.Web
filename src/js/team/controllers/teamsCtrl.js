@@ -1,17 +1,19 @@
-angular.module('pb').controller('teamsCtrl', ['$http', '$scope', 'Notification', '$http', '$uibModal', function ($http, $scope, Notification, $http, $modal) {
+angular.module('pb').controller('teamsCtrl', ['$http', '$scope', 'Notification', '$http', '$uibModal', 'config','TeamFactory','titleFactory', function ($http, $scope, Notification, $http, $modal, config, TeamFactory,titleFactory) {
+
+    titleFactory.set('View Teams');
+
     $scope.teams = [];
     $scope.canAddOrRemove = true;
     $scope.isLoading = false;
 
-
     function loadTeams() {
         $scope.isLoading = true;
-        $http.get('Team/Get').then(function (response) {
+
+        TeamFactory.getAll().then(function (response) {
             $scope.isLoading = false;
-            console.log('teams: ', response.data);
-            $scope.teams = response.data.Data;
-        })
-    };
+            $scope.teams = response.data;
+        });
+    }
 
     $scope.loadTeams = loadTeams;
 
@@ -23,16 +25,12 @@ angular.module('pb').controller('teamsCtrl', ['$http', '$scope', 'Notification',
             team.canAddOrRemove = false;
         });
 
-        $http.get('Home/AddOrRemoveTeam?userId=' + _app.userId + '&teamId=' + team.Id).then(function (response) {
+        TeamFactory.addOrRemoveTeam(team.Id).then(function () {
             Notification.clearAll();
             Notification.success({ message: 'Success', delay: 2000 });
 
-            //angular.forEach($scope.teams, function (team) {
-            //    team.canAddOrRemove = true;
-            //});
             $scope.loadTeams();
         });
-
     };
 
     $scope.changeDefaultTeam = function (team) {
@@ -43,40 +41,20 @@ angular.module('pb').controller('teamsCtrl', ['$http', '$scope', 'Notification',
             team.canAddOrRemove = false;
         });
 
-        //angular.forEach($scope.teams, function (team) {
-        //    if (team.Id != team.Id) {
-        //        team.IsDefault = false;
-        //    }
-        //});
-
-        $http.get('Home/SetDefaultTeam?userId=' + _app.userId + '&teamId=' + team.Id).then(function (response) {
-
+        TeamFactory.setDefaultTeam(team.Id).then(function () {
             Notification.clearAll();
             Notification.success({ message: 'Success', delay: 2000 });
 
-            //angular.forEach($scope.teams, function (team) {
-            //    team.canAddOrRemove = true;
-            //});
             $scope.loadTeams();
-
         });
     };
-    //window.notification = Notification;
 
     $scope.loadTeams();
 
-    //$scope.$watch(function () {
-    //    return $scope.teams;
-    //}, function (nv, ov) {
-    //    if (!angular.equals(nv, ov))
-    //        console.log('teams changed', nv);
-    //},true);
-
     $scope.createTeam = function () {
-        console.log('create');
         $modal.open({
             templateUrl: 'addTeam.html',
-            controller: function ($scope, $modalInstance, $http) {
+            controller: function ($scope, $uibModalInstance, $http, TeamFactory) {
 
                 $scope.teamName = null;
                 $scope.isLoading = false;
@@ -84,17 +62,14 @@ angular.module('pb').controller('teamsCtrl', ['$http', '$scope', 'Notification',
                 $scope.ok = function () {
                     $scope.isLoading = true;
 
-                    $http.post('Team/Create', { Name: $scope.teamName }).then(function (response) {
-                        console.log('created');
-
-                        $modalInstance.dismiss('cancel');
+                    TeamFactory.create({ Name: $scope.teamName }).then(function () {
+                        $uibModalInstance.dismiss('cancel');
                         loadTeams();
-
                     });
                 };
 
                 $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
+                    $uibModalInstance.dismiss('cancel');
                 };
             },
             size: 'small'
@@ -105,21 +80,22 @@ angular.module('pb').controller('teamsCtrl', ['$http', '$scope', 'Notification',
 
         $modal.open({
             templateUrl: 'deleteTeam.html',
-            controller: function ($scope, $modalInstance, $http, team) {
+            controller: function ($scope, $uibModalInstance, $http, team) {
                 $scope.team = team;
                 $scope.isLoading = false;
 
                 $scope.ok = function () {
                     console.log('delete team', team);
                     $scope.isLoading = true;
-                    $http.get('Team/Delete?id=' + team.Id).then(function (response) {
-                        $modalInstance.dismiss('cancel');
+
+                    TeamFactory.remove(team.Id).then(function () {
+                        $uibModalInstance.dismiss('cancel');
                         loadTeams();
-                    })
+                    });
                 };
 
                 $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
+                    $uibModalInstance.dismiss('cancel');
                 };
             },
             resolve: {

@@ -27,12 +27,13 @@ angular.module('pb').directive('viewMarkersOverview', ['$timeout', 'MarkerFactor
             function loadMarkers () {
                 $scope.vm.isLoadingMarkers = true;
 
-                var userId = $scope.playerId == void 0 ? window._app.userId : $scope.playerId;
+                //var userId = $scope.playerId == void 0 ? window._app.userId : $scope.playerId;
 
-                MarkerFactory.byUserId(userId).then(function (response) {
+
+                MarkerFactory.byUserId($scope.playerId).then(function (response) {
                     $scope.vm.isLoadingMarkers = false;
 
-                    $scope.vm.markers = response.data.Data;
+                    $scope.vm.markers = response.data;
                 });
 
 
@@ -66,7 +67,7 @@ angular.module('pb').directive('addMarker', ['$uibModal', function ($modal) {
             $scope.addMarker = function () {
                 $modal.open({
                     templateUrl: 'addMarkerModal.html',
-                    controller: function ($scope,$modalInstance, markerAdded, playerId, MarkerFactory) {
+                    controller: function ($scope,$uibModalInstance, markerAdded, playerId, MarkerFactory) {
                         $scope.vm = {
                             isSaving: false,
                             marker: {
@@ -84,14 +85,14 @@ angular.module('pb').directive('addMarker', ['$uibModal', function ($modal) {
                                 console.log('response', response);
 
                                 $scope.vm.isSaving = false;
-                                $modalInstance.dismiss('cancel');
+                                $uibModalInstance.dismiss('cancel');
                                 markerAdded();
 
                             });
                         };
 
                         $scope.cancel = function () {
-                            $modalInstance.dismiss('cancel');
+                            $uibModalInstance.dismiss('cancel');
                         }
                     },
                     resolve: {
@@ -121,7 +122,7 @@ angular.module('pb').directive('editMarker', ['$uibModal', function ($modal) {
             $scope.saveMarker = function () {
                 $modal.open({
                     templateUrl: 'editMarkerModal.html',
-                    controller: function ($scope, $modalInstance, marker, MarkerFactory) {
+                    controller: function ($scope, $uibModalInstance, marker, MarkerFactory) {
 
                         $scope.vm = {
                             isSaving: false,
@@ -143,14 +144,14 @@ angular.module('pb').directive('editMarker', ['$uibModal', function ($modal) {
 
                                 console.log('response', response);
 
-                                $modalInstance.dismiss('cancel');
+                                $uibModalInstance.dismiss('cancel');
                             });
 
                             console.log('save it!!');
                         };
 
                         $scope.cancel = function () {
-                            $modalInstance.dismiss('cancel');
+                            $uibModalInstance.dismiss('cancel');
                         }
                     },
                     resolve: {

@@ -1,0 +1,59 @@
+<div class="row">
+    <div class="">
+        <div class="panel panel-default">
+            <div class="panel-heading relative">
+                <h3 class="panel-title display-inline">Rank and Team Information</h3>
+                <div title="Add Team" class="pointer display-inline" style="margin: 0 10px;">
+                    <button class="btn btn-info btn-xs" ui-sref="teamsView"><i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+            <div class="panel-body">
+
+                <div ng-if="vm.user.Teams.length == 0">
+                    You are not in a team... <a href="#" ui-sref="teamsView">Add?</a>
+                </div>
+                <div class="table-responsive" ng-if="vm.user.Teams.length > 0">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th class="center" style="text-align:center;">Default?</th>
+                            <th>Team</th>
+                            <th>Rank</th>
+                            <th style="text-align:center;">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="vertical-middle" ng-repeat="team in vm.user.Teams">
+                            <td class="center" style="text-align:center;">
+                                <input type="radio" name="teams" ng-value="true" ng-model="team.IsDefaultTeam" style="height:2em;width:2em;" ng-change="changeDefaultTeam(team)" />
+                            </td>
+                            <td>
+                                <a href="#" ui-sref="teamView({id: team.TeamId})">
+                                    <img ng-if="team.TeamImageUrl" ng-src="{{team.TeamImageUrl}}" class="profile-image" style="margin-right:5px;" />
+                                    <div ng-if="!team.TeamImageUrl" class="profile-image inline"><i class="fa fa-image" style="color:white;font-size:2em;margin-right:10px"></i></div>
+                                    {{team.TeamName}}
+                                </a>
+                            </td>
+                            <td ng-if="team.HasRank">
+                                <a href="#" ui-sref="teamView({id: team.TeamId})">
+                                    <img ng-src="{{team.RankImageUrl}}" class="profile-image" style="margin-right:5px;"/>{{team.RankName}}
+                                </a>
+                            </td>
+                            <td ng-if="!team.HasRank">
+                                <i class="fa fa-thumbs-down fa-fw"></i>No Rank! <a href="#" ui-sref="teamView({id: team.TeamId})">Add?</a>
+                            </td>
+                            <td style="text-align:center;">
+                                <button class="btn btn-link" ng-click="deleteTeam(team.UserTeamId)"><i class="fa fa-times pointer" style="font-size:1.5em;"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="text-align:center; font-size:2em;">
+                    <i class="fa fa-refresh fa-spin" ng-if="vm.isLoading"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,7 @@
-angular.module('pb').controller('homeCtrl', ['$scope', 'NavigationFactory', 'NotificationFactory', '$state', '$http', 'tokenContainer', 'OidcManager','config', function ($scope, NavigationFactory, NotificationFactory,$state, $http, tokenContainer, OidcManager, config) {
+angular.module('pb').controller('homeCtrl', ['$scope', 'NavigationFactory', 'NotificationFactory', '$state', '$http', 'tokenContainer', 'OidcManager','config', '$pusher','Notification', '$rootScope','titleFactory', function ($scope, NavigationFactory, NotificationFactory,$state, $http, tokenContainer, OidcManager, config, $pusher, Notification, $rootScope, titleFactory) {
+
+    //$rootScope.pageTitle = config.appName + ' - ' + 'Home';
+    titleFactory.set('Home');
 
     $scope.user = null;
     $scope.NavigationFactory = NavigationFactory;
@@ -13,7 +16,7 @@ angular.module('pb').controller('homeCtrl', ['$scope', 'NavigationFactory', 'Not
     $scope.timeSince = function (date) {
 
        // date = parseInt(date.substr(6));
-
+        return moment(date).calendar();
         date = new Date(date);
 
         var seconds = Math.floor((new Date() - date) / 1000);
@@ -109,5 +112,30 @@ angular.module('pb').controller('homeCtrl', ['$scope', 'NavigationFactory', 'Not
     window.mgr = manager;
 
     getNotifications();
+
+    //console.log('$pusher is', $pusher);
+
+    var pusher = $pusher(pusherClient);
+    //console.log('pusher is ', pusher);
+
+    function notificationCreatedHandler (data) {
+        console.log('data from pusher', data);
+        Notification.success('New Notification! - ' + data.Data.Title);
+        getNotifications();
+    }
+
+    var channel = pusher.subscribe('notification');
+    //var decoratedHandler = pusher.bind('created', function (data) {
+    //
+    //});
+
+    var decoratedHandler = channel.bind('created', notificationCreatedHandler);
+
+    $scope.$on('$destroy', function () {
+
+        channel.unbind(null, decoratedHandler);
+        channel.unbind();
+        console.log('member count', channel.members);
+    });
 
 }]);

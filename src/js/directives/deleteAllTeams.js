@@ -1,4 +1,4 @@
-angular.module('pb').directive('deleteAllTeams', ['$http',function ($http) {
+angular.module('pb').directive('deleteAllTeams', ['$http', 'config', 'Notification', function ($http, config, Notification) {
     return {
         template: '<button class="btn btn-danger" ng-click="deleteAllTeams()">Delete All Teams</button>',
         restrict: 'A',
@@ -8,8 +8,9 @@ angular.module('pb').directive('deleteAllTeams', ['$http',function ($http) {
                 var result = window.confirm('Are you sure?');
 
                 if (result) {
-                    $http.get('Team/DeleteAll', function (response) {
+                    $http.get(config.apiUrl + 'v1/Team/DeleteAll').then(function (response) {
                         console.log(response);
+                        Notification.success('Deleted all teams!');
                     });
                 }
             };

@@ -3,21 +3,26 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>My AngularJS App</title>
+    <title ng-bind="pageTitle"></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--<link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">-->
-    <!--<link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">-->
-    <!--<link rel="stylesheet" href="app.css">-->
-    <!--<script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>-->
 
+    <!--build:css style.css-->
     <link rel="stylesheet" href="content/dark.bootstrap.min.css">
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="bower_components/angular-ui-notification/dist/angular-ui-notification.min.css">
     <link rel="stylesheet" href="bower_components/angular-xeditable/dist/css/xeditable.css">
     <link rel="stylesheet" href="content/sass/app.css">
+    <!--endbuild-->
+
+    <!--build:angular ang.js-->
+    <script src="bower_components/angular/angular.min.js"></script>
+    <!--endbuild-->
+
+    <script src="js/views/templates.js"></script>
 </head>
-<body>
+
+<body ng-cloak>
 <nav class="navbar navbar-default navbar-fixed-top" ng-controller="navigationCtrl">
     <div class="container">
         <div class="navbar-header">
@@ -27,7 +32,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#" ui-sref="home">PB {{version}}</a>
+            <a class="navbar-brand" href="#" ui-sref="home">{{config.appName}} v{{version}}</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse" collapse="!NavigationFactory.showNav">
             <ul class="nav navbar-nav ng-cloak">
@@ -36,10 +41,10 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li ng-show="fullName != ''"><a style="color: white;">[ Hi, {{fullName}}! ]</a></li>
-                <li><a href="#" ui-sref="siteSettings" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;" title="Site Settings"><i class="fa fa-bolt fa-fw bigger-1-5 "></i><span class="mobile">Site Settings</span></a></li>
-                <li><a href="#" ui-sref="userView({id: user.Id})" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;" title="Profile"><i class="fa fa-cog fa-fw bigger-1-5 "></i><span class="mobile">Settings</span></a></li>
-                <li><a href="Account/Logout" title="Sign Out"><i class="fa fa-sign-out fa-fw bigger-1-5 "></i><span class="mobile">Sign Out</span></a></li>
+                <li ng-show="fullName != ''"><a style="color: white;">[ Hi, {{profile.given_name}} {{profile.family_name}}! ]</a></li>
+                <li ng-if="profile.role.indexOf('SiteAdministrator') > -1"><a href="#" ui-sref="siteSettings" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;" title="Site Settings"><i class="fa fa-bolt fa-fw bigger-1-5 "></i><span class="mobile">Site Settings</span></a></li>
+                <li><a href="#" ui-sref="userView({id: profile.sub})" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;" title="Profile"><i class="fa fa-cog fa-fw bigger-1-5 "></i><span class="mobile">Settings</span></a></li>
+                <li ng-if="!profile.expired"><a href="#" title="Sign Out" ng-click="logout()"><i class="fa fa-sign-out fa-fw bigger-1-5 "></i><span class="mobile">Sign Out</span></a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
@@ -49,10 +54,10 @@
 
 <div ui-view></div>
 
-<!--<div>Angular seed app: v<span app-version></span></div>-->
 
 
-<script src="bower_components/angular/angular.min.js"></script>
+
+<!--build:js lib.js-->
 <script src="bower_components/angular-touch/angular-touch.min.js"></script>
 <script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
 <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
@@ -62,8 +67,11 @@
 <script src="bower_components/angular-xeditable/dist/js/xeditable.min.js"></script>
 <script src="bower_components/angular.uuid2/dist/angular-uuid2.min.js"></script>
 <script src="bower_components/oidc-token-manager/dist/oidc-token-manager.min.js"></script>
+<script src="js/libraries/pusher.min.js"></script>
+<script src="bower_components/pusher-angular/lib/pusher-angular.min.js"></script>
 
 <script src="js/app.js"></script>
+<script src="js/providers/versionPollerProvider.js"></script>
 <script src="config/local/config.js"></script>
 <script src="js/controllers/homeCtrl.js"></script>
 <script src="js/controllers/navigationCtrl.js"></script>
@@ -93,6 +101,15 @@
 <script src="js/user/directives/viewLoadoutsOverview.js"></script>
 <script src="js/user/directives/viewMarkersOverview.js"></script>
 <script src="js/user/services/UserFactory.js"></script>
+<script src="js/services/ImageFactory.js"></script>
+<script src="js/services/titleFactory.js"></script>
+<script src="js/filters/prettyDate.js"></script>
+<script src="js/user/directives/noPlayerFound.js"></script>
+<script src="js/user/directives/playerBreadcrumb.js"></script>
+<script src="js/user/directives/playerDetails.js"></script>
+<script src="js/user/directives/playerTeams.js"></script>
+<!--endbuild-->
+
 
 
 </body>

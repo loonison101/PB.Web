@@ -1,4 +1,5 @@
-angular.module('pb').controller('siteSettingsCtrl', ['$scope', '$http', function ($scope, $http) {
+angular.module('pb').controller('siteSettingsCtrl', ['titleFactory', function (titleFactory) {
 
+    titleFactory.set('Site Settings');
 
 }]);
