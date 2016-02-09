@@ -1,4 +1,4 @@
-angular.module('pb').directive('viewMarkersOverview', ['$timeout', 'MarkerFactory', function ($timeout,MarkerFactory) {
+angular.module('pb').directive('viewMarkersOverview', ['$timeout', 'MarkerFactory','RoleFactory', function ($timeout,MarkerFactory, RoleFactory) {
     return {
         restrict: 'A',
         templateUrl: 'js/user/directives/views/viewMarkersOverview.html',
@@ -9,7 +9,7 @@ angular.module('pb').directive('viewMarkersOverview', ['$timeout', 'MarkerFactor
         link: function ($scope, $element) {
             // Show markers (pic of the marker, name, manufacturer
             // Used in n loadouts or say used in all loadouts
-
+            $scope.role = RoleFactory;
 
             $scope.vm = {
                 markers: [],

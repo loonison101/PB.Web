@@ -2,7 +2,7 @@
     <img ng-if="!loadout.ImageUrl" ng-src="Content/Images/rsz_person.png" class="responsive-image" style="width:260px;height:530px;background:white;"/>
     <img ng-if="loadout.ImageUrl" ng-src="{{loadout.ImageUrl}}" class="responsive-image img-rounded" style="width:260px;height:530px;background:white;"/>
 
-    <div class="after">
+    <div class="after" ng-if="role.isMine(playerId)">
         <button class="btn btn-primary max-dimensions" ng-click="changeLoadoutImage(loadout)"><i class="fa fa-pencil"></i></button>
     </div>
 </div>

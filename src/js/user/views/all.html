@@ -21,7 +21,7 @@
                                 <!--<th>Email</th>-->
                                 <!--<th>First Name</th>-->
                                 <th>Name</th>
-                                <th>Actions</th>
+                                <th  ng-if="role.isAdmin()">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -40,7 +40,7 @@
                                 <!--<td>-->
                                     <!---->
                                 <!--</td>-->
-                                <td>
+                                <td  ng-if="role.isAdmin()">
                                     <button class="btn btn-link" ng-click="deletePlayer(player)" title="Delete Player"><i class="fa fa-times pointer" style="font-size: 1.5em;"></i></button>
                                 </td>
                             </tr>

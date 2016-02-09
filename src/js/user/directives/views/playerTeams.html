@@ -3,14 +3,14 @@
         <div class="panel panel-default">
             <div class="panel-heading relative">
                 <h3 class="panel-title display-inline">Rank and Team Information</h3>
-                <div title="Add Team" class="pointer display-inline" style="margin: 0 10px;">
+                <div title="Add Team" class="pointer display-inline" style="margin: 0 10px;"  ng-if="role.isMine(vm.user.Id)">
                     <button class="btn btn-info btn-xs" ui-sref="teamsView"><i class="fa fa-plus"></i></button>
                 </div>
             </div>
             <div class="panel-body">
 
                 <div ng-if="vm.user.Teams.length == 0">
-                    You are not in a team... <a href="#" ui-sref="teamsView">Add?</a>
+                    You are not in a team... <a href="#" ng-if="role.isMine(vm.user.Id)" ui-sref="teamsView">Add?</a>
                 </div>
                 <div class="table-responsive" ng-if="vm.user.Teams.length > 0">
                     <table class="table table-striped">
@@ -19,7 +19,7 @@
                             <th class="center" style="text-align:center;">Default?</th>
                             <th>Team</th>
                             <th>Rank</th>
-                            <th style="text-align:center;">Actions</th>
+                            <th style="text-align:center;" ng-if="role.isMine(vm.user.Id)">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -42,7 +42,7 @@
                             <td ng-if="!team.HasRank">
                                 <i class="fa fa-thumbs-down fa-fw"></i>No Rank! <a href="#" ui-sref="teamView({id: team.TeamId})">Add?</a>
                             </td>
-                            <td style="text-align:center;">
+                            <td style="text-align:center;" ng-if="role.isMine(vm.user.Id)">
                                 <button class="btn btn-link" ng-click="deleteTeam(team.UserTeamId)"><i class="fa fa-times pointer" style="font-size:1.5em;"></i></button>
                             </td>
                         </tr>

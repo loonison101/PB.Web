@@ -96,7 +96,7 @@
                                 <th class="center">In Rank?</th>
                                 <th class="center">Image</th>
                                 <th>Name</th>
-                                <th style="text-align: center;">Actions</th>
+                                <th style="text-align: center;" ng-if="role.isAdmin()">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -111,7 +111,7 @@
                                 <td>
                                     ({{rank.Sequence}}) {{rank.Name}}
                                 </td>
-                                <td style="text-align: center;">
+                                <td style="text-align: center;" ng-if="role.isAdmin()">
                                     <button class="btn btn-link" ng-click="deleteRank(rank)"><i class="fa fa-times pointer" style="font-size: 1.5em;"></i></button>
                                 </td>
                             </tr>
@@ -143,7 +143,7 @@
                                 <!--<th>Image</th>-->
                                 <th>Call Sign</th>
                                 <th>Name</th>
-                                <th style="text-align: center;">Actions</th>
+                                <th style="text-align: center;" ng-if="role.isAdmin()">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -157,7 +157,7 @@
                                 <!--<td>-->
                                     <!--<button class="btn btn-link" ui-sref="userView({id: user.Id})">{{user.Email}}</button>-->
                                 <!--</td>-->
-                                <td style="text-align: center;">
+                                <td style="text-align: center;"  ng-if="role.isAdmin()">
                                     <button class="btn btn-link" ng-click="deleteUser(user)"><i class="fa fa-times pointer" style="font-size: 1.5em;"></i></button>
                                 </td>
                             </tr>

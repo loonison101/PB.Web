@@ -3,7 +3,7 @@
         <div class="panel panel-default">
             <div class="panel-heading relative">
                 <h3 class="panel-title display-inline">Markers</h3>
-                <div title="Add Team" class="pointer display-inline" style="margin: 0 10px;">
+                <div title="Add Team" class="pointer display-inline" style="margin: 0 10px;"  ng-if="role.isMine(playerId)">
                     <div add-marker markeradded="markeradded()" player-id="playerId"></div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-4 col-xs-4"></div>
-                                <div class="col-md-8 col-xs-8" style="margin-top:10px;">
+                                <div class="col-md-8 col-xs-8" style="margin-top:10px;" ng-if="role.isMine(playerId)">
                                     <div edit-marker marker="marker"></div>
                                     <div delete-marker markerid="marker.Id" markerdeleted="markerdeleted()"></div>
                                 </div>

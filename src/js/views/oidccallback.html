@@ -5,20 +5,26 @@
     <title></title>
 </head>
 <body>
+    <!--<script src="../../config/prod/config.js"></script>-->
+    <script src="../../config/local/config.js"></script>
     <script src="../../bower_components/oidc-token-manager/dist/oidc-token-manager.min.js"></script>
     <script>
 
         var config = {
-            client_id: 'implicitlane',
+            client_id: 'PB Web Site',
             //redirect_uri: 'http://loonison-pc/pb.web/scripts/app/views/oidccallback.html',
-            redirect_uri: 'http://localhost:63342/PB.Web/src/js/views/oidccallback.html',
-            authority: 'http://localhost:25922/identity'
+            //redirect_uri: 'http://localhost:63342/PB.Web/src/js/views/oidccallback.html',
+            redirect_uri: window._config.redirect_uri,
+            //authority: 'http://localhost:25922/identity'
+            //authority: 'http://localhost/sts/identity',
+            authority: window._config.authority
         };
 
         var mgr = new OidcTokenManager(config);
 
         mgr.processTokenCallbackAsync().then(function () {
-            window.location = 'http://localhost:63342/PB.Web/src/index.html';
+            //window.location = 'http://localhost:63342/PB.Web/src/index.html';
+            window.location = _config.callbackAsync
         }, function (error) {
             console.error(error);
         });

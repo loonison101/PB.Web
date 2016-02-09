@@ -1,4 +1,4 @@
-angular.module('pb').directive('viewLoadoutsOverview', ['$timeout', '$uibModal', 'LoadoutFactory', function ($timeout, $modal, LoadoutFactory) {
+angular.module('pb').directive('viewLoadoutsOverview', ['$timeout', '$uibModal', 'LoadoutFactory','RoleFactory', function ($timeout, $modal, LoadoutFactory, RoleFactory) {
     return {
         restrict: 'A',
         templateUrl: 'js/user/directives/views/viewLoadoutsOverview.html',
@@ -8,6 +8,7 @@ angular.module('pb').directive('viewLoadoutsOverview', ['$timeout', '$uibModal',
         },
         link: function ($scope, $element) {
 
+            $scope.role = RoleFactory;
             $scope.vm = {
                 loadouts: [],
                 isLoadingLoadouts: false
@@ -119,7 +120,7 @@ angular.module('pb').directive('viewLoadoutsOverview', ['$timeout', '$uibModal',
     }
 }]);
 
-angular.module('pb').directive('viewGears', ['$uibModal', 'GearFactory', 'uuid2', function ($modal, GearFactory, uuid2) {
+angular.module('pb').directive('viewGears', ['$uibModal', 'GearFactory', 'uuid2','RoleFactory', function ($modal, GearFactory, uuid2, RoleFactory) {
     return {
         restrict: 'A',
         templateUrl: 'js/user/directives/views/viewGears.html',
@@ -128,12 +129,19 @@ angular.module('pb').directive('viewGears', ['$uibModal', 'GearFactory', 'uuid2'
             gears: '=',
             section: '=',
             editing: '=',
-            loadoutId: '='
+            loadoutId: '=',
+            playerId: '='
         },
         link: function ($scope, $element) {
             $scope.prettyDate = function (d) {
                 return moment(d).calendar();
             };
+
+            //$scope.$watch('playerId', function(nv, ov){
+            //    console.log('playerId is...', nv,ov);
+            //});
+
+            $scope.role = RoleFactory;
 
             $scope.vm = {
                 doesAnyExist: false
@@ -277,7 +285,8 @@ angular.module('pb').directive('gearRow', [function () {
             section: '=',
             editing: '=',
             loadoutId: '=',
-            bodyPart: '='
+            bodyPart: '=',
+            playerId: '='
         },
         link: function ($scope) {
             $scope.imageUrl = '';

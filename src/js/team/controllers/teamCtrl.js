@@ -1,9 +1,10 @@
-angular.module('pb').controller('teamCtrl', ['$scope', '$stateParams', '$http', '$timeout', '$uibModal', 'Upload', '$stateParams','TeamFactory','OidcManager', 'config','RankFactory','titleFactory', function ($scope, $stateParams, $http, $timeout, $modal, Upload, $stateParams, TeamFactory, OidcManager, config, RankFactory, titleFactory) {
+angular.module('pb').controller('teamCtrl', ['$scope', '$stateParams', '$http', '$timeout', '$uibModal', 'Upload', '$stateParams','TeamFactory','OidcManager', 'config','RankFactory','titleFactory','RoleFactory', function ($scope, $stateParams, $http, $timeout, $modal, Upload, $stateParams, TeamFactory, OidcManager, config, RankFactory, titleFactory, RoleFactory) {
 
     titleFactory.set('View Team');
 
     $scope.team = null;
     $scope.feeds = [];
+    $scope.role = RoleFactory;
 
     function loadTeam () {
         TeamFactory.load($stateParams.id).then(function(response){

@@ -1,12 +1,13 @@
-angular.module('pb').controller('homeCtrl', ['$scope', 'NavigationFactory', 'NotificationFactory', '$state', '$http', 'tokenContainer', 'OidcManager','config', '$pusher','Notification', '$rootScope','titleFactory', function ($scope, NavigationFactory, NotificationFactory,$state, $http, tokenContainer, OidcManager, config, $pusher, Notification, $rootScope, titleFactory) {
+angular.module('pb').controller('homeCtrl', ['$scope', 'NavigationFactory', 'NotificationFactory', '$state', '$http', 'tokenContainer', 'OidcManager','config', '$pusher','Notification', '$rootScope','titleFactory','RoleFactory', function ($scope, NavigationFactory, NotificationFactory,$state, $http, tokenContainer, OidcManager, config, $pusher, Notification, $rootScope, titleFactory, RoleFactory) {
 
-    //$rootScope.pageTitle = config.appName + ' - ' + 'Home';
     titleFactory.set('Home');
 
     $scope.user = null;
     $scope.NavigationFactory = NavigationFactory;
     $scope.fullName = ' use auth';//window._app.fullName;
     $scope.version = 'use auth'; //window._config.version;
+    $scope.mgr = OidcManager;
+    $scope.role = RoleFactory;
 
     $scope.vm = {
         isLoadingNotifications: false,
@@ -135,7 +136,6 @@ angular.module('pb').controller('homeCtrl', ['$scope', 'NavigationFactory', 'Not
 
         channel.unbind(null, decoratedHandler);
         channel.unbind();
-        console.log('member count', channel.members);
     });
 
 }]);

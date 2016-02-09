@@ -1,6 +1,6 @@
 <div class="panel-heading relative">
     <h3 class="panel-title display-inline">Loadouts</h3>
-    <div class="pointer display-inline" style="margin: 0 10px;">
+    <div class="pointer display-inline" style="margin: 0 10px;"  ng-if="role.isMine(playerId)">
         <button class="btn btn-xs btn-primary" ng-click="createLoadout()"><i class="fa fa-plus"></i></button>
     </div>
 </div>

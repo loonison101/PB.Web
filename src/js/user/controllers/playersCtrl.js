@@ -1,11 +1,13 @@
-angular.module('pb').controller('playersCtrl', [ '$scope', '$http', 'Notification', 'UserFactory','titleFactory', function ( $scope, $http, Notification, UserFactory, titleFactory ) {
+angular.module('pb').controller('playersCtrl', [ '$scope', '$http', 'Notification', 'UserFactory','titleFactory','RoleFactory', function ( $scope, $http, Notification, UserFactory, titleFactory, RoleFactory ) {
 
-    titleFactory.set('View Players')
+    titleFactory.set('View Players');
 
     $scope.model = {
         players: [],
         isLoading: false
     };
+
+    $scope.role = RoleFactory;
 
     function loadPlayers () {
         $scope.model.isLoading = true;

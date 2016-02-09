@@ -1,6 +1,8 @@
-angular.module('pb').controller('userViewCtrl', ['$scope', 'UserFactory', '$http', '$uibModal', 'Notification', '$stateParams', 'OidcManager','titleFactory', function ($scope, UserFactory, $http, $modal, Notification, $stateParams, OidcManager, titleFactory) {
+angular.module('pb').controller('userViewCtrl', ['$scope', 'UserFactory', '$http', '$uibModal', 'Notification', '$stateParams', 'OidcManager','titleFactory','RoleFactory', function ($scope, UserFactory, $http, $modal, Notification, $stateParams, OidcManager, titleFactory, RoleFactory) {
 
     titleFactory.set('View Player');
+
+    $scope.role = RoleFactory;
 
     $scope.vm = {
         isLoading: false,
@@ -74,7 +76,7 @@ angular.module('pb').controller('userViewCtrl', ['$scope', 'UserFactory', '$http
             templateUrl: 'editUser.html',
             resolve: {
                 user: function () {
-                    return $scope.user;
+                    return $scope.vm.user;
                 }
             },
             controller: function ($scope, $uibModalInstance, user, $http) {

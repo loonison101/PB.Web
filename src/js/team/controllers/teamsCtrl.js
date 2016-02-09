@@ -1,10 +1,11 @@
-angular.module('pb').controller('teamsCtrl', ['$http', '$scope', 'Notification', '$http', '$uibModal', 'config','TeamFactory','titleFactory', function ($http, $scope, Notification, $http, $modal, config, TeamFactory,titleFactory) {
+angular.module('pb').controller('teamsCtrl', ['$http', '$scope', 'Notification', '$http', '$uibModal', 'config','TeamFactory','titleFactory','RoleFactory', function ($http, $scope, Notification, $http, $modal, config, TeamFactory,titleFactory, RoleFactory) {
 
     titleFactory.set('View Teams');
 
     $scope.teams = [];
     $scope.canAddOrRemove = true;
     $scope.isLoading = false;
+    $scope.role = RoleFactory;
 
     function loadTeams() {
         $scope.isLoading = true;

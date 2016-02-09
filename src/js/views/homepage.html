@@ -30,7 +30,7 @@
 
 
             <p>
-                View your profile <a href="#" ui-sref="userView">here</a>.
+                View your profile <a href="#" ui-sref="userView({id: mgr.profile.sub})">here</a>.
             </p>
             <p>
                 Add or remove teams <a href="#" ui-sref="teamsView">here</a>.
@@ -73,7 +73,7 @@
                         </li>
                     </ul>
                 </div>
-                <button type="button" class="btn btn-link" ng-click="deleteNotification(notification.Id)" style="padding:0;margin:0;font-size:0.8em;">Delete</button>
+                <button ng-if="role.isAdmin()" type="button" class="btn btn-link" ng-click="deleteNotification(notification.Id)" style="padding:0;margin:0;font-size:0.8em;">Delete</button>
             </div>
             <hr ng-if="!$last"/>
         </div>

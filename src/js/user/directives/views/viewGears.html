@@ -1,7 +1,7 @@
 <div class="col-md-10 col-xs-9" style="text-align:left;padding-top:3%;height:100px;white-space:nowrap;overflow-y:hidden;">
 
     <!--<div ng-if="editing" style="width:50px;height:50px;display:inline-block;vertical-align: top;margin-top:10px;margin-right:10px;">-->
-    <div style="display:inline-block;vertical-align: top;margin-top:10px;margin-right:10px;">
+    <div style="display:inline-block;vertical-align: top;margin-top:10px;margin-right:10px;" ng-if="role.isMine(playerId)">
         <button class="btn btn-primary" style="" ng-click="addGear()"><i class="fa fa-plus" style=""></i></button>
     </div>
 

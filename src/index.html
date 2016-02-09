@@ -9,6 +9,10 @@
 
     <!--build:css style.css-->
     <link rel="stylesheet" href="content/dark.bootstrap.min.css">
+    <!--<link rel="stylesheet" href="content/slate.bootstrap.min.css">-->
+    <!--<link rel="stylesheet" href="content/yeti.bootstrap.min.css">-->
+    <!--<link rel="stylesheet" href="content/simplex.bootstrap.min.css">-->
+    <!--<link rel="stylesheet" href="content/flatly.bootstrap.min.css">-->
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="bower_components/angular-ui-notification/dist/angular-ui-notification.min.css">
     <link rel="stylesheet" href="bower_components/angular-xeditable/dist/css/xeditable.css">
@@ -34,15 +38,15 @@
             </button>
             <a class="navbar-brand" href="#" ui-sref="home">{{config.appName}} v{{version}}</a>
         </div>
-        <div id="navbar" class="navbar-collapse collapse" collapse="!NavigationFactory.showNav">
-            <ul class="nav navbar-nav ng-cloak">
+        <div id="navbar" class="navbar-collapse collapse" uib-collapse="!NavigationFactory.showNav">
+            <ul class="nav navbar-nav">
                 <li ng-repeat="item in NavigationFactory.menuItems" ng-class="{'active': item.isActive}">
                     <a href="#" ui-sref="{{item.uiSrefName}}" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;NavigationFactory.setActive(item, navCollapsed);">{{item.name}}</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li ng-show="fullName != ''"><a style="color: white;">[ Hi, {{profile.given_name}} {{profile.family_name}}! ]</a></li>
-                <li ng-if="profile.role.indexOf('SiteAdministrator') > -1"><a href="#" ui-sref="siteSettings" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;" title="Site Settings"><i class="fa fa-bolt fa-fw bigger-1-5 "></i><span class="mobile">Site Settings</span></a></li>
+                <li ng-if="role.isAdmin()"><a href="#" ui-sref="siteSettings" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;" title="Site Settings"><i class="fa fa-bolt fa-fw bigger-1-5 "></i><span class="mobile">Site Settings</span></a></li>
                 <li><a href="#" ui-sref="userView({id: profile.sub})" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;" title="Profile"><i class="fa fa-cog fa-fw bigger-1-5 "></i><span class="mobile">Settings</span></a></li>
                 <li ng-if="!profile.expired"><a href="#" title="Sign Out" ng-click="logout()"><i class="fa fa-sign-out fa-fw bigger-1-5 "></i><span class="mobile">Sign Out</span></a></li>
             </ul>
@@ -65,7 +69,7 @@
 <script src="bower_components/angular-ui-notification/dist/angular-ui-notification.min.js"></script>
 <script src="bower_components/moment/min/moment.min.js"></script>
 <script src="bower_components/angular-xeditable/dist/js/xeditable.min.js"></script>
-<script src="bower_components/angular.uuid2/dist/angular-uuid2.min.js"></script>
+<script src="bower_components/Angular.uuid2/dist/angular-uuid2.min.js"></script>
 <script src="bower_components/oidc-token-manager/dist/oidc-token-manager.min.js"></script>
 <script src="js/libraries/pusher.min.js"></script>
 <script src="bower_components/pusher-angular/lib/pusher-angular.min.js"></script>
@@ -108,6 +112,7 @@
 <script src="js/user/directives/playerBreadcrumb.js"></script>
 <script src="js/user/directives/playerDetails.js"></script>
 <script src="js/user/directives/playerTeams.js"></script>
+<script src="js/services/RoleFactory.js"></script>
 <!--endbuild-->
 
 

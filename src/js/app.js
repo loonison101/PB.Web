@@ -92,6 +92,17 @@ app.config(['$stateProvider', '$urlRouterProvider', 'NotificationProvider', '$ht
             //response: function(response) {
             //    return response;
             //},
+            request: function ( config ) {
+                var mgr = $injector.get('OidcManager');
+
+                if (mgr.expired){
+                    mgr.redirectForToken();
+                } else {
+                    return config;
+                }
+
+
+            },
             responseError: function ( response ) {
                 if ( response.status === 500 ) {
                     var Notification = $injector.get('Notification');
@@ -107,18 +118,38 @@ app.config(['$stateProvider', '$urlRouterProvider', 'NotificationProvider', '$ht
                     Notification.error({
                         title: 'Error!',
                         message: 'Authentication server down, please notify lanekatris@gmail.com',
-                        delay: 1000*15
+                        delay: 1000 * 15
                     })
-                } else if ( response.status === 401 ) {
+                } else if (response.status === 403) {
                     var Notification = $injector.get('Notification');
 
                     Notification.error({
-                        title: 'Session Expired!',
-                        message: 'Redirecting...',
-                        delay: 1000*15
-                    });
+                        title: 'Error!',
+                        message: 'You are not allowed to view this data or perform that action. Did you allow permissions when logging in? Try logging out and allow permissions.',
+                        delay: 1000 * 15
+                    })
+                } else if ( response.status === 401 ) {
+                    var Notification = $injector.get('Notification');
+                    var mgr = $injector.get('OidcManager');
 
-                    window.location.reload();
+                    if (mgr.profile == void 0) {
+                        mgr.redirectForToken();
+                    }
+                    else if (mgr.expired) {
+                        mgr.redirectForToken();
+                    }else{
+                        Notification.error({
+                            title: 'Access Denied',
+                            message: 'You do not have proper permissions to view this data',
+                            delay: 1000*15
+                        });
+                    }
+
+
+
+
+                    //window.location.reload();
+                    //mgr.redirectForToken()
                 }
             }
         }
@@ -198,7 +229,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'NotificationProvider', '$ht
 
 }]);
 
-app.run(function(editableOptions, editableThemes) {
+app.run(function(editableOptions, editableThemes, $rootScope, OidcManager) {
 
     function setupXeditable() {
         editableOptions.theme = 'bs3';
@@ -209,4 +240,12 @@ app.run(function(editableOptions, editableThemes) {
 
     // Setup xeditable template settings
     setupXeditable();
+
+    $rootScope.$on('$locationChangeStart', function(event){
+        if (OidcManager.expired){
+
+            OidcManager.redirectForToken();
+            event.preventDefault();
+        }
+    })
 });

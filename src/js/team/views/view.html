@@ -46,7 +46,7 @@
                                     <th class="center">Default?</th>
                                     <th>Image</th>
                                     <th>Name</th>
-                                    <th>Actions</th>
+                                    <th ng-if="role.isAdmin()">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -67,7 +67,7 @@
 
                                         <div style="font-style:italic;">Ranks<span class="badge" style="margin-left:5px;">{{team.RankCount}}</span></div>
                                     </td>
-                                    <td>
+                                    <td ng-if="role.isAdmin()">
                                             <button class="btn btn-link" ng-click="deleteTeam(team)" title="Delete Team"><i class="fa fa-times pointer" style="font-size:1.5em;"></i></button>
                                     </td>
                                 </tr>
