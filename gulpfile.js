@@ -10,8 +10,8 @@ var merge = require('merge-stream');
 var replace = require('gulp-replace');
 var rimraf = require('rimraf');
 
+// Main prod task
 gulp.task('default-prod', ['usemin', 'angularTemplates', 'moveFonts', 'copyImages', 'copyHtmlFiles', 'copyJsFiles']);
-//gulp.task('default', ['usemin', 'angularTemplates']);
 
 // Clean up dist folder
 gulp.task('clean-dist', function (cb) {
@@ -23,26 +23,12 @@ gulp.task('usemin', function() {
     var min = gulp.src('./src/*.html')
         .pipe(replace('<script src="config/local/config.js"></script>', '<script src="config/prod/config.js"></script>'))
         .pipe(usemin({
-            css: [ minifyCss(),replace("url(../fonts", "url(fonts"),  rev() ],//
+            css: [ minifyCss(),replace("url(../fonts", "url(fonts"),  rev() ],
             html: [ minifyHtml({ empty: true }) ],
-            //js: [ sourcemaps.init(), 'concat', uglify(), rev(), sourcemaps.write('.') ],
             js: [uglify({mangle:false}),rev()],
             angular: [ uglify(), rev() ]
-            //inlinecss: [ minifyCss(), 'concat' ]
         }))
         .pipe(gulp.dest('dist/'));
-
-    // Minfiy angularjs templates
-    //var a = gulp.src('./src/js/**/*.html')
-    //    //.pipe(templateCache({
-    //    //    module: 'pb'//,
-    //    //    //transformUrl: function (url) {
-    //    //    //    return 'js/' + url;
-    //    //    //}
-    //    //}))
-    //    .pipe(templateCache())
-    //    //.pipe(gulp.dest('dist/'));
-    //    .pipe(gulp.dest('dist/js/views/'));
 
     return merge(min);
 });
@@ -61,7 +47,6 @@ gulp.task('angularTemplates', function () {
 
 // Third gulp task
 gulp.task('moveFonts', function () {
-
 
     var firstFontTransfer = gulp.src('./src/content/fonts/*.*')
         .pipe(gulp.dest('./dist/fonts'));
@@ -98,32 +83,3 @@ gulp.task('copyJsFiles', function () {
 
     return merge(js1, js2);
 });
-
-
-
-
-
-
-
-//gulp.task('css', function () {
-//    return gulp.src('./src/*.html')
-//        .pipe(usemin({
-//            css: [minifyCss(), rev() ]
-//        }))
-//        .pipe(gulp.dest('dist/content/'))
-//});
-
-
-
-//gulp.task('moveCss', ['usemin'], function () {
-//    return gulp.src('dist/*.css')
-//        .pipe(gulp.dest('dist/content'));
-//});
-
-//gulp.task('ang', function () {
-//    return gulp.src('./src/js/**/*.html')
-//        .pipe(templateCache({
-//            module: 'pb'
-//        }))
-//        .pipe(gulp.dest('dist/'));
-//});
