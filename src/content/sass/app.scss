@@ -206,3 +206,37 @@
       vertical-align: middle !important;
     }
 }
+
+#HW_badge_cont {
+
+  display: block !important;
+  position: absolute !important;
+  z-index: 999 !important;
+  right: -10px;
+  top: 0px;
+
+
+}
+
+#HW_badge {
+
+  background: #5ab987 !important;
+  background-color: #5ab987 !important;
+  z-index: 999 !important;
+
+}
+
+#HW_frame_cont {
+  position:absolute !important;
+  top: 79px !important;
+
+  @media screen and (max-width: 400px) {
+    left: 30px !important;
+  }
+}
+
+#HW_frame_peak {
+  @media screen and (max-width: 400px) {
+    right: 230px !important;
+  }
+}
