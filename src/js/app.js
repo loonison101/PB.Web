@@ -1,34 +1,79 @@
-var app = angular.module('pb', ['ui.router', 'ui.bootstrap', 'ui-notification', 'ngTouch', 'ngFileUpload', 'xeditable', 'angularUUID2', 'templates', 'pusher-angular']);
+var app = angular.module('pb', ['ui.router', 'ui.bootstrap', 'ui-notification', 'ngTouch', 'ngFileUpload', 'xeditable', 'angularUUID2', 'templates', 'pusher-angular', 'auth0', 'angular-storage', 'angular-jwt']);
 
 angular.isGuid = angular.isGuid || function ( guid ) {
         return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(guid);
     };
 
-app.config(['$stateProvider', '$urlRouterProvider', 'NotificationProvider', '$httpProvider','OidcManagerProvider', function ($stateProvider, $urlRouterProvider, NotificationProvider, $httpProvider, OidcManagerProvider) {
+app.config(['$stateProvider', '$urlRouterProvider', 'NotificationProvider', '$httpProvider','OidcManagerProvider', 'authProvider','jwtInterceptorProvider', function ($stateProvider, $urlRouterProvider, NotificationProvider, $httpProvider, OidcManagerProvider, authProvider, jwtInterceptorProvider) {
 
     function registerStates () {
         $stateProvider
+            .state('login',{
+                url: '/login',
+                template: '<div style="height:100px;"></div>' +
+                '<div class="login-page clearfix">' +
+                '<div class="login-box center">' +
+                '<h1>Please Login</h1>' +
+                '<a ng-click="login()" class="btn btn-primary btn-lg">Sign In</a>' +
+                '</div>' +
+                '</div>',
+                controller: function ($scope, auth, $location, store, $http, config) {
+                    $scope.login = function () {
+                        auth.signin({
+                            authParams: {
+                                scope: 'openid offline_access'
+                            }
+                        }, function (profile, token, access_token, state, refresh_token) {
+                            store.set('profile', profile);
+                            store.set('token', token);
+                            store.set('refreshToken', refresh_token);
+                            console.log('hey, call api and make sure i exist', profile);
+
+                            $http.get(config.apiUrl + 'v1/Player/UpsertMe?id=' + profile.user_id + '&email=' + profile.email + '&username=' + profile.username).then(function (response) {
+                                console.log('response from upsertme: ', response.data, response);
+                                store.set('pbUserId', response.data);
+                            });
+
+                            $location.path('/home');
+                        }, function (error) {
+                            console.log('error', error);
+                        });
+                    }
+                }
+            })
             .state('home',      {
                 url: '/home',
                 templateUrl: 'js/views/homepage.html',
-                controller: 'homeCtrl'
+                controller: 'homeCtrl',
+                data: {
+                    requiresLogin: true
+                }
             })
             .state('userView',  {
                 url: '/user/view/:id',
                 templateUrl: 'js/user/views/view.html',
-                controller: 'userViewCtrl'
+                controller: 'userViewCtrl',
+                data: {
+                    requiresLogin: true
+                }
             })
             .state('players',   {
                 url: '/players',
                 templateUrl: 'js/user/views/all.html',
-                controller: 'playersCtrl'
+                controller: 'playersCtrl',
+                data: {
+                    requiresLogin: true
+                }
             })
             .state('userView.deleteTeam', {
                 url: '/deleteTeam/:userId/:teamId',
                 views: {
                     modal: {
                         template: '',
-                        controller: 'userViewDeleteTeamCtrl'
+                        controller: 'userViewDeleteTeamCtrl',
+                        data: {
+                            requiresLogin: true
+                        }
                     }
                 }
 
@@ -38,39 +83,60 @@ app.config(['$stateProvider', '$urlRouterProvider', 'NotificationProvider', '$ht
                 views: {
                     modal: {
                         template: '',
-                        controller: 'userViewChangeRankCtrl'
+                        controller: 'userViewChangeRankCtrl',
+                        data: {
+                            requiresLogin: true
+                        }
                     }
                 }
             })
             .state('userEdit', {
                 url: '/user/edit/:id?highlight',
                 templateUrl: 'js/user/views/edit.html',
-                controller: 'userEditCtrl'
+                controller: 'userEditCtrl',
+                data: {
+                    requiresLogin: true
+                }
             })
             .state('rankView', {
                 url: '/rank/view/:teamId?highlightId',
                 templateUrl: 'js/rank/views/view.html',
-                controller: 'rankViewCtrl'
+                controller: 'rankViewCtrl',
+                data: {
+                    requiresLogin: true
+                }
             })
             .state('rankEdit', {
                 url: '/rank/edit/:teamId',
                 templateUrl: 'js/rank/views/edit.html',
-                controller: 'rankEditCtrl'
+                controller: 'rankEditCtrl',
+                data: {
+                    requiresLogin: true
+                }
             })
             .state('teamsView', {
                 url: '/teams',
                 templateUrl: 'js/team/views/view.html',
-                controller: 'teamsCtrl'
+                controller: 'teamsCtrl',
+                data: {
+                    requiresLogin: true
+                }
             })
             .state('teamView', {
                 url: '/team/:id?action',
                 templateUrl: 'js/team/views/viewSingle.html',
-                controller: 'teamCtrl'
+                controller: 'teamCtrl',
+                data: {
+                    requiresLogin: true
+                }
             })
             .state('siteSettings', {
                 url: '/site/settings',
                 templateUrl: 'js/site/views/index.html',
-                controller: 'siteSettingsCtrl'
+                controller: 'siteSettingsCtrl',
+                data: {
+                    requiresLogin: true
+                }
             });
     }
 
@@ -84,88 +150,122 @@ app.config(['$stateProvider', '$urlRouterProvider', 'NotificationProvider', '$ht
         delay: 5000
     });
 
+    authProvider.init({
+        domain: _config.auth0Domain,
+        clientID: _config.auth0ClientId,
+        loginState: 'login'
+    });
+
+    var refreshingToken = null;
+    jwtInterceptorProvider.tokenGetter = function (store, jwtHelper){
+        //return store.get('token');
+
+        var token = store.get('token');
+        var refreshToken = store.get('refreshToken');
+
+        if (token) {
+            if (!jwtHelper.isTokenExpired(token)){
+                return store.get('token');
+            } else {
+                if (refreshingToken === null) {
+                    refreshingToken = auth.refreshIdToken(refreshToken).then(function (idToken) {
+                        store.set('token', idToken);
+                        return idToken;
+                    }).finally(function () {
+                        refreshingToken = null;
+                    })
+                }
+
+                return refreshingToken;
+            }
+        }
+
+    };
+
+    $httpProvider.interceptors.push('jwtInterceptor');
+
     // Need this to tell MVC that we make AJAX requests, jQuery does this by default, as does XMLHTTPREQUEST
     //$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-    $httpProvider.interceptors.push(['$q','$injector', function($q, $injector) {
-        return {
-            //response: function(response) {
-            //    return response;
-            //},
-            request: function ( config ) {
-                var mgr = $injector.get('OidcManager');
+    //$httpProvider.interceptors.push(['$q','$injector', function($q, $injector) {
+    //    return {
+    //        //response: function(response) {
+    //        //    return response;
+    //        //},
+    //        request: function ( config ) {
+    //            var mgr = $injector.get('OidcManager');
+    //
+    //            if (mgr.expired){
+    //                mgr.redirectForToken();
+    //            } else {
+    //                return config;
+    //            }
+    //
+    //
+    //        },
+    //        responseError: function ( response ) {
+    //            if ( response.status === 500 ) {
+    //                var Notification = $injector.get('Notification');
+    //
+    //                Notification.error({
+    //                    title: 'Error!',
+    //                    message: 'Error!',
+    //                    delay: 1000*15
+    //                })
+    //            } else if (response.status === -1) {
+    //                var Notification = $injector.get('Notification');
+    //
+    //                Notification.error({
+    //                    title: 'Error!',
+    //                    message: 'Authentication server down, please notify lanekatris@gmail.com',
+    //                    delay: 1000 * 15
+    //                })
+    //            } else if (response.status === 403) {
+    //                var Notification = $injector.get('Notification');
+    //
+    //                Notification.error({
+    //                    title: 'Error!',
+    //                    message: 'You are not allowed to view this data or perform that action. Did you allow permissions when logging in? Try logging out and allow permissions.',
+    //                    delay: 1000 * 15
+    //                })
+    //            } else if ( response.status === 401 ) {
+    //                var Notification = $injector.get('Notification');
+    //                var mgr = $injector.get('OidcManager');
+    //
+    //                if (mgr.profile == void 0) {
+    //                    mgr.redirectForToken();
+    //                }
+    //                else if (mgr.expired) {
+    //                    mgr.redirectForToken();
+    //                }else{
+    //                    Notification.error({
+    //                        title: 'Access Denied',
+    //                        message: 'You do not have proper permissions to view this data',
+    //                        delay: 1000*15
+    //                    });
+    //                }
+    //
+    //
+    //
+    //
+    //                //window.location.reload();
+    //                //mgr.redirectForToken()
+    //            }
+    //        }
+    //    }
+    //}]);
 
-                if (mgr.expired){
-                    mgr.redirectForToken();
-                } else {
-                    return config;
-                }
-
-
-            },
-            responseError: function ( response ) {
-                if ( response.status === 500 ) {
-                    var Notification = $injector.get('Notification');
-
-                    Notification.error({
-                        title: 'Error!',
-                        message: 'Error!',
-                        delay: 1000*15
-                    })
-                } else if (response.status === -1) {
-                    var Notification = $injector.get('Notification');
-
-                    Notification.error({
-                        title: 'Error!',
-                        message: 'Authentication server down, please notify lanekatris@gmail.com',
-                        delay: 1000 * 15
-                    })
-                } else if (response.status === 403) {
-                    var Notification = $injector.get('Notification');
-
-                    Notification.error({
-                        title: 'Error!',
-                        message: 'You are not allowed to view this data or perform that action. Did you allow permissions when logging in? Try logging out and allow permissions.',
-                        delay: 1000 * 15
-                    })
-                } else if ( response.status === 401 ) {
-                    var Notification = $injector.get('Notification');
-                    var mgr = $injector.get('OidcManager');
-
-                    if (mgr.profile == void 0) {
-                        mgr.redirectForToken();
-                    }
-                    else if (mgr.expired) {
-                        mgr.redirectForToken();
-                    }else{
-                        Notification.error({
-                            title: 'Access Denied',
-                            message: 'You do not have proper permissions to view this data',
-                            delay: 1000*15
-                        });
-                    }
-
-
-
-
-                    //window.location.reload();
-                    //mgr.redirectForToken()
-                }
-            }
-        }
-    }]);
-
-    $httpProvider.interceptors.push(['tokenContainer','OidcManager', function (tokenContainer, OidcManager){
-        return {
-            request: function (config) {
-                if (config.url.indexOf('v1') > -1){
-                    config.headers.Authorization = 'Bearer ' + OidcManager.access_token;
-                }
-
-                return config;
-            }
-        }
-    }]);
+    //$httpProvider.interceptors.push(['tokenContainer','OidcManager', function (tokenContainer, OidcManager){
+    //    return {
+    //        request: function (config) {
+    //            if (config.url.indexOf('v1') > -1){
+    //                config.headers.Authorization = 'Bearer ' + OidcManager.access_token;
+    //            }
+    //
+    //            return config;
+    //        }
+    //    }
+    //}]);
 
     //$httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
     //
@@ -220,16 +320,18 @@ app.config(['$stateProvider', '$urlRouterProvider', 'NotificationProvider', '$ht
 
     );
 
-    if (OidcManagerProvider.$get().expired){
-        OidcManagerProvider.$get().redirectForToken();
-    }
+    //if (OidcManagerProvider.$get().expired){
+    //    OidcManagerProvider.$get().redirectForToken();
+    //}
 
     window.pusherClient = new Pusher('8e4a480bb5dc1a9a463b');
 
 
 }]);
 
-app.run(function(editableOptions, editableThemes, $rootScope, OidcManager) {
+app.run(function(editableOptions, editableThemes, $rootScope, OidcManager, auth, store, jwtHelper, $location, $state) {
+
+    auth.hookEvents();
 
     function setupXeditable() {
         editableOptions.theme = 'bs3';
@@ -241,11 +343,45 @@ app.run(function(editableOptions, editableThemes, $rootScope, OidcManager) {
     // Setup xeditable template settings
     setupXeditable();
 
-    $rootScope.$on('$locationChangeStart', function(event){
-        if (OidcManager.expired){
 
-            OidcManager.redirectForToken();
-            event.preventDefault();
+    var refreshingToken = null;
+    $rootScope.$on('$locationChangeStart', function (event) {
+
+        var token = store.get('token');
+        var refreshToken = store.get('refreshToken');
+
+        if (token) {
+            if (!jwtHelper.isTokenExpired(token)){
+                if (!auth.isAuthenticated)
+                    auth.authenticate(store.get('profile'),token);
+            } else {
+                if (refreshToken) {
+                    if (refreshingToken === null) {
+                        refreshingToken = auth.refreshIdToken(refreshToken).then(function (idToken) {
+                            store.set('token', idToken);
+                            auth.authenticate(store.get('profile'), idToken);
+
+                        }).finally(function () {
+                            refreshingToken = null;
+                        })
+                    }
+
+                    return refreshingToken;
+                } else {
+                    $state.go('login');
+                }
+
+
+            }
         }
-    })
+
+    });
+
+    //$rootScope.$on('$locationChangeStart', function(event){
+    //    if (OidcManager.expired){
+    //
+    //        OidcManager.redirectForToken();
+    //        event.preventDefault();
+    //    }
+    //})
 });

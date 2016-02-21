@@ -1,10 +1,13 @@
-angular.module('pb').factory('RoleFactory', ['OidcManager', function ( OidcManager ) {
+angular.module('pb').factory('RoleFactory', ['OidcManager', 'auth', 'store', function ( OidcManager, auth, store ) {
 
     var _data = {
         adminRoleName: 'SiteAdministrator'
     };
 
     function isAdmin () {
+
+        return false;
+
         if ( !OidcManager.profile )
             return false;
 
@@ -30,7 +33,8 @@ angular.module('pb').factory('RoleFactory', ['OidcManager', function ( OidcManag
         if ( id == void 0 )
             return false;
 
-        if ( OidcManager.profile.sub == id )
+        //if ( OidcManager.profile.sub == id )
+        if ( store.get('pbUserId') == id )
             return true;
 
         return false;

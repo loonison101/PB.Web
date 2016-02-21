@@ -38,7 +38,7 @@
 <nav class="navbar navbar-default navbar-fixed-top" ng-controller="navigationCtrl">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav">
+            <button type="button" class="navbar-toggle" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav" ng-show="auth.isAuthenticated">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -47,13 +47,13 @@
             <a class="navbar-brand relative" href="#" ui-sref="home">{{config.appName}} v{{version}}</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse" uib-collapse="!NavigationFactory.showNav">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav" ng-show="auth.isAuthenticated">
                 <li ng-repeat="item in NavigationFactory.menuItems" ng-class="{'active': item.isActive}">
                     <a href="#" ui-sref="{{item.uiSrefName}}" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;NavigationFactory.setActive(item, navCollapsed);">{{item.name}}</a>
                 </li>
             </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li ng-show="fullName != ''" class="full-name relative"><a style="color: white;">[ Hi, {{profile.given_name}} {{profile.family_name}}! ]</a></li>
+            <ul class="nav navbar-nav navbar-right" ng-show="auth.isAuthenticated">
+                <li class="full-name relative"><a style="color: white;">[ Hi, {{auth.profile.username}}! ]</a></li>
                 <li ng-if="role.isAdmin()"><a href="#" ui-sref="siteSettings" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;" title="Site Settings"><i class="fa fa-bolt fa-fw bigger-1-5 "></i><span class="mobile">Site Settings</span></a></li>
                 <li><a href="#" ui-sref="userView({id: profile.sub})" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;" title="Profile"><i class="fa fa-cog fa-fw bigger-1-5 "></i><span class="mobile">Settings</span></a></li>
                 <li ng-if="!profile.expired"><a href="#" title="Sign Out" ng-click="logout()"><i class="fa fa-sign-out fa-fw bigger-1-5 "></i><span class="mobile">Sign Out</span></a></li>
@@ -81,6 +81,10 @@
 <script src="bower_components/oidc-token-manager/dist/oidc-token-manager.min.js"></script>
 <script src="js/libraries/pusher.min.js"></script>
 <script src="bower_components/pusher-angular/lib/pusher-angular.min.js"></script>
+<script src="bower_components/auth0-lock/build/auth0-lock.min.js"></script>
+<script src="bower_components/auth0-angular/build/auth0-angular.min.js"></script>
+<script src="bower_components/a0-angular-storage/dist/angular-storage.min.js"></script>
+<script src="bower_components/angular-jwt/dist/angular-jwt.min.js"></script>
 
 <script src="js/app.js"></script>
 <script src="js/providers/versionPollerProvider.js"></script>

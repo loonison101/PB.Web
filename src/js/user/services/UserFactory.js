@@ -1,13 +1,13 @@
-angular.module('pb').factory('UserFactory', ['$http', '$window', 'config','OidcManager', function ($http, $window, config, OidcManager) {
+angular.module('pb').factory('UserFactory', ['$http', '$window', 'config','OidcManager','store', function ($http, $window, config, OidcManager, store) {
 
     function loadUser ( userId ) {
         return $http.get(config.apiUrl +  'v1/Player/ById?id=' + userId);
     }
 
     function loadWithCurrentId (){
-        if (OidcManager.profile == void 0) OidcManager.redirectForToken();
+        //if (OidcManager.profile == void 0) OidcManager.redirectForToken();
 
-        return $http.get(config.apiUrl + 'v1/Player/ById?id=' + OidcManager.profile.sub);
+        return $http.get(config.apiUrl + 'v1/Player/ById?id=' + store.get('pbUserId'));
     }
 
     function getAll() {

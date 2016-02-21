@@ -29,6 +29,9 @@
     "oidc-token-manager": "~1.0.1",
     "angular-bootstrap": "~1.1.0",
     "ng-file-upload": "~11.1.1",
-    "pusher-angular": "~0.1.8"
+    "pusher-angular": "~0.1.8",
+    "auth0-angular": "~4.1.0",
+    "a0-angular-storage": "~0.0.13",
+    "angular-jwt": "~0.0.9"
   }
 }

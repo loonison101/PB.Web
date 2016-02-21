@@ -1,11 +1,11 @@
-angular.module('pb').factory('TeamFactory', ['$http', 'config', 'OidcManager', function ($http, config, OidcManager) {
+angular.module('pb').factory('TeamFactory', ['$http', 'config', 'OidcManager','store', function ($http, config, OidcManager, store) {
 
     function loadById ( teamId ) {
         return $http.get(config.apiUrl + 'v1/Team/ById?id=' + teamId);
     }
 
     function removeUser ( teamId ) {
-        return $http.get(config.apiUrl + 'v1/Team/RemoveUser?userId=' + OidcManager.profile.sub + '&teamId=' + teamId);
+        return $http.get(config.apiUrl + 'v1/Team/RemoveUser?userId=' + store.get('pbUserId') + '&teamId=' + teamId);
     }
 
     function update ( team ) {
@@ -17,11 +17,11 @@ angular.module('pb').factory('TeamFactory', ['$http', 'config', 'OidcManager', f
     }
 
     function addOrRemoveTeam ( teamId ) {
-        return $http.get(config.apiUrl + 'v1/Team/AddOrRemoveTeam?userId=' + OidcManager.profile.sub + '&teamId=' + teamId);
+        return $http.get(config.apiUrl + 'v1/Team/AddOrRemoveTeam?userId=' + store.get('pbUserId') + '&teamId=' + teamId);
     }
 
     function setDefaultTeam ( teamId ) {
-        return $http.get(config.apiUrl + 'v1/Team/SetDefaultTeam?userId=' + OidcManager.profile.sub + '&teamId=' + teamId);
+        return $http.get(config.apiUrl + 'v1/Team/SetDefaultTeam?userId=' + store.get('pbUserId') + '&teamId=' + teamId);
     }
 
     function create ( team ) {

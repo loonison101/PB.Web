@@ -1,4 +1,4 @@
-angular.module('pb').controller('userViewCtrl', ['$scope', 'UserFactory', '$http', '$uibModal', 'Notification', '$stateParams', 'OidcManager','titleFactory','RoleFactory', function ($scope, UserFactory, $http, $modal, Notification, $stateParams, OidcManager, titleFactory, RoleFactory) {
+angular.module('pb').controller('userViewCtrl', ['$scope', 'UserFactory', '$http', '$uibModal', 'Notification', '$stateParams', 'OidcManager','titleFactory','RoleFactory','store', function ($scope, UserFactory, $http, $modal, Notification, $stateParams, OidcManager, titleFactory, RoleFactory, store) {
 
     titleFactory.set('View Player');
 
@@ -8,7 +8,7 @@ angular.module('pb').controller('userViewCtrl', ['$scope', 'UserFactory', '$http
         isLoading: false,
         wasUserFound: false,
         user: null,
-        playerId: $stateParams.id
+        playerId: $stateParams.id || store.get('pbUserId')
     };
 
     function loadUser () {

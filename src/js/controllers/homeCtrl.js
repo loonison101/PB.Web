@@ -1,13 +1,17 @@
-angular.module('pb').controller('homeCtrl', ['$scope', 'NavigationFactory', 'NotificationFactory', '$state', '$http', 'tokenContainer', 'OidcManager','config', '$pusher','Notification', '$rootScope','titleFactory','RoleFactory', function ($scope, NavigationFactory, NotificationFactory,$state, $http, tokenContainer, OidcManager, config, $pusher, Notification, $rootScope, titleFactory, RoleFactory) {
+angular.module('pb').controller('homeCtrl', ['$scope', 'NavigationFactory', 'NotificationFactory', '$state', '$http', 'tokenContainer', 'OidcManager','config', '$pusher','Notification', '$rootScope','titleFactory','RoleFactory', 'auth', function ($scope, NavigationFactory, NotificationFactory,$state, $http, tokenContainer, OidcManager, config, $pusher, Notification, $rootScope, titleFactory, RoleFactory, auth) {
 
     titleFactory.set('Home');
 
     $scope.user = null;
     $scope.NavigationFactory = NavigationFactory;
     $scope.fullName = ' use auth';//window._app.fullName;
-    $scope.version = 'use auth'; //window._config.version;
+    $scope.version = 'use auth'; //window._config.version;n
     $scope.mgr = OidcManager;
     $scope.role = RoleFactory;
+
+    $scope.auth = auth;
+    //console.log('auth is', auth);
+    window.auth = auth;
 
     $scope.vm = {
         isLoadingNotifications: false,
@@ -71,11 +75,11 @@ angular.module('pb').controller('homeCtrl', ['$scope', 'NavigationFactory', 'Not
 
 
     var manager = OidcManager;
-
-    if (manager.expired){
-       // console.warn('dont forget im not redirecting');
-        manager.redirectForToken();
-    }
+    //
+    //if (manager.expired){
+    //   // console.warn('dont forget im not redirecting');
+    //    manager.redirectForToken();
+    //}
 
     function go(){
         //$http.get('http://localhost/pb.api/v1/Players'//,{
