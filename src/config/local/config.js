@@ -12,8 +12,10 @@ window._config = {
     authority: 'http://localhost/sts/identity',
     redirect_uri: 'http://localhost:63342/PB.Web/src/js/views/oidccallback.html',
     callbackAsync: 'http://localhost:63342/PB.Web/src/index.html',
-    version: '1.3',
-    appName: 'PB'
+    version: '1.4',
+    appName: 'PB',
+    auth0Domain: 'loonison.auth0.com',
+    auth0ClientId: 'OEHso6aTa51lkal5j3pR65aU4oYXSUrv'
 };
 
 angular.module('pb').factory('config', [function () {
