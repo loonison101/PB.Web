@@ -6,7 +6,8 @@ angular.module('pb').factory('RoleFactory', ['OidcManager', 'auth', 'store', fun
 
     function isAdmin () {
 
-        return false;
+        //return false;
+        return true;
 
         if ( !OidcManager.profile )
             return false;

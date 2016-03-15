@@ -81,6 +81,8 @@
             <hr ng-if="!$last"/>
         </div>
 
+        <h4 ng-if="vm.notifications.length == 0 && !vm.isLoadingNotifications">No notifications!</h4>
+
         <div style="text-align:center; font-size:2em;">
             <i class="fa fa-refresh fa-spin" ng-if="vm.isLoadingNotifications"></i>
         </div>
