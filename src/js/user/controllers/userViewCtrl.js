@@ -133,7 +133,7 @@ angular.module('pb').controller('userViewCtrl', ['$scope', 'UserFactory', '$http
         console.log('default team', team);
         Notification.primary('Saving...');
 
-        UserFactory.setDefaultTeam(OidcManager.profile.sub, team.TeamId).then(function () {
+        UserFactory.setDefaultTeam(store.get('pbUserId'), team.TeamId).then(function () {
             Notification.clearAll();
             Notification.success({ message: 'Success', delay: 2000 });
 

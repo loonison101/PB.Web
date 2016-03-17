@@ -1,4 +1,4 @@
-angular.module('pb').factory('RankFactory', ['$http','config','OidcManager', function ($http, config, OidcManager) {
+angular.module('pb').factory('RankFactory', ['$http','config','store', function ($http, config, store) {
 
     function loadRanks ( teamId ) {
         return $http.get('Rank/ByTeamId?id=' + teamId);
@@ -17,7 +17,7 @@ angular.module('pb').factory('RankFactory', ['$http','config','OidcManager', fun
     }
 
     function setDefaultRank ( rankId, teamId ) {
-        return $http.get(config.apiUrl + 'v1/Rank/SetDefaultRank?userId=' + OidcManager.profile.sub + '&rankId=' + rankId + '&teamId=' + teamId);
+        return $http.get(config.apiUrl + 'v1/Rank/SetDefaultRank?userId=' + store.get('pbUserId') + '&rankId=' + rankId + '&teamId=' + teamId);
     }
 
     return {

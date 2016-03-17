@@ -157,7 +157,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'NotificationProvider', '$ht
     });
 
     var refreshingToken = null;
-    jwtInterceptorProvider.tokenGetter = function (store, jwtHelper){
+    jwtInterceptorProvider.tokenGetter = function (store, jwtHelper, auth){
         //return store.get('token');
 
         var token = store.get('token');
@@ -183,6 +183,32 @@ app.config(['$stateProvider', '$urlRouterProvider', 'NotificationProvider', '$ht
     };
 
     $httpProvider.interceptors.push('jwtInterceptor');
+
+    $httpProvider.interceptors.push(['$q', '$injector', function ( $q, $injector ) {
+        return {
+            responseError: function ( response ) {
+
+                var Notification = $injector.get('Notification');
+
+                if ( response.status === 400 ){
+                    Notification.error({
+                        title: 'Error 400!',
+                        message: response.data.Message,
+                        delay: 1000 * 5
+                    })
+                } else if ( response.status === 500 ) {
+                    console.error(response.data);
+                    Notification.error({
+                        title: 'Error 500',
+                        message: response.data.Message,
+                        delay: 1000 * 5
+                    })
+                }
+
+                return response;
+            }
+        }
+    }]);
 
     // Need this to tell MVC that we make AJAX requests, jQuery does this by default, as does XMLHTTPREQUEST
     //$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
