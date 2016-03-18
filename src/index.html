@@ -55,7 +55,7 @@
             <ul class="nav navbar-nav navbar-right" ng-show="auth.isAuthenticated">
                 <li class="full-name relative"><a style="color: white;">[ Hi, {{auth.profile.username}}! ]</a></li>
                 <li ng-if="role.isAdmin()"><a href="#" ui-sref="siteSettings" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;" title="Site Settings"><i class="fa fa-bolt fa-fw bigger-1-5 "></i><span class="mobile">Site Settings</span></a></li>
-                <li><a href="#" ui-sref="userView({id: profile.sub})" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;" title="Profile"><i class="fa fa-cog fa-fw bigger-1-5 "></i><span class="mobile">Settings</span></a></li>
+                <li><a href="#" ui-sref="userView({id: userId})" ng-click="NavigationFactory.showNav = !NavigationFactory.showNav;" title="Profile"><i class="fa fa-cog fa-fw bigger-1-5 "></i><span class="mobile">Settings</span></a></li>
                 <li ng-if="!profile.expired"><a href="#" title="Sign Out" ng-click="logout()"><i class="fa fa-sign-out fa-fw bigger-1-5 "></i><span class="mobile">Sign Out</span></a></li>
             </ul>
         </div><!--/.nav-collapse -->

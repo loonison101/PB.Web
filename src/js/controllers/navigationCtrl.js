@@ -9,6 +9,8 @@ angular.module('pb').controller('navigationCtrl', ['$scope', 'NavigationFactory'
     //window.profile = $scope.profile;
     $scope.auth = auth;
 
+    $scope.userId = store.get('pbUserId');
+
 
 
     $scope.logout = function () {
