@@ -1,40 +1,26 @@
-angular.module('pb').factory('RoleFactory', ['OidcManager', 'auth', 'store', function ( OidcManager, auth, store ) {
+angular.module('pb').factory('RoleFactory', ['auth', 'store', function ( auth, store ) {
 
     var _data = {
-        adminRoleName: 'SiteAdministrator'
+        adminRoleName: 'SiteAdmin'
     };
 
     function isAdmin () {
 
-        //return false;
-        return true;
+        if ( !auth.profile ) return false;
+        if ( !auth.profile.user_metadata ) return false;
+        if ( !angular.isArray(auth.profile.user_metadata.roles) ) return false;
 
-        if ( !OidcManager.profile )
-            return false;
-
-        if ( !OidcManager.profile.role )
-            return false;
-
-        if ( angular.isArray(OidcManager.profile.role) ) {
-            return OidcManager.profile.role.indexOf(_data.adminRoleName) > -1
-        } else {
-            return OidcManager.profile.role == _data.adminRoleName;
-        }
+        return auth.profile.user_metadata.roles.indexOf(_data.adminRoleName) > -1;
     }
 
     function isMine ( id ) {
 
-        //if (id != void 0)
-        //console.log('ismine id', id);
-
         if ( isAdmin() )
             return true;
-        //return true;
-        //console.log('the id fro role manger is:', id);
+
         if ( id == void 0 )
             return false;
 
-        //if ( OidcManager.profile.sub == id )
         if ( store.get('pbUserId') == id )
             return true;
 
