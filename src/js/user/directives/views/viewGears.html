@@ -17,7 +17,7 @@
                 <div>{{gear.Created | prettyDate}}</div>
             </div>
         </div>
-        <div style="display:inline-block;vertical-align:top;margin-left:5px;">
+        <div style="display:inline-block;vertical-align:top;margin-left:5px;" ng-if="role.isMine(playerId)">
             <button class="btn btn-xs btn-primary" style="display:block;margin-bottom:5px;" ng-click="editGear(gear)"><span class="fa fa-pencil"></span></button>
             <button class="btn btn-xs btn-danger" style="display:block;" ng-click="removeGear(gear)"><span class="fa fa-close"></span></button>
         </div>

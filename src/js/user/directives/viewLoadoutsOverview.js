@@ -142,6 +142,7 @@ angular.module('pb').directive('viewGears', ['$uibModal', 'GearFactory', 'uuid2'
             //});
 
             $scope.role = RoleFactory;
+            
 
             $scope.vm = {
                 doesAnyExist: false
