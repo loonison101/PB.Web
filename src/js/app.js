@@ -1,4 +1,4 @@
-var app = angular.module('pb', ['ui.router', 'ui.bootstrap', 'ui-notification', 'ngTouch', 'ngFileUpload', 'xeditable', 'angularUUID2', 'templates', 'pusher-angular', 'auth0', 'angular-storage', 'angular-jwt']);
+var app = angular.module('pb', ['ui.router', 'ui.bootstrap', 'ui-notification', 'ngTouch', 'ngFileUpload', 'xeditable', 'angularUUID2', 'templates', 'pusher-angular', 'auth0', 'angular-storage', 'angular-jwt', 'ngclipboard']);
 
 angular.isGuid = angular.isGuid || function ( guid ) {
         return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(guid);
@@ -201,6 +201,14 @@ app.config(['$stateProvider', '$urlRouterProvider', 'NotificationProvider', '$ht
                     Notification.error({
                         title: 'Error 500',
                         message: response.data.Message,
+                        delay: 1000 * 5
+                    })
+                } else if ( response.status === -1 ) {
+                    console.log(response.data);
+
+                    Notification.error({
+                        title: 'Too Fast, slow down',
+                        message: response.data,
                         delay: 1000 * 5
                     })
                 }

@@ -7,6 +7,18 @@
 
         <div class="panel panel-default relative">
             <div class="panel-heading relative">
+                <h3 class="panel-title">API Key</h3>
+            </div>
+            <div class="panel-body">
+                <input type="text" id="authToken" style="width:90%;display:inline;" class="form-control" value="{{auth.idToken}}" />
+                <button class="btn btn-default" ngclipboard data-clipboard-target="#authToken" alt="Copy to clipboard">
+                    <i class="fa fa-copy"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="panel panel-default relative">
+            <div class="panel-heading relative">
                 <h3 class="panel-title">Actions</h3>
             </div>
             <div class="panel-body">
