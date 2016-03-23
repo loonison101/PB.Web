@@ -67,10 +67,11 @@ angular.module('pb').directive('addMarker', ['$uibModal', function ($modal) {
             $scope.addMarker = function () {
                 $modal.open({
                     templateUrl: 'addMarkerModal.html',
-                    controller: function ($scope,$uibModalInstance, markerAdded, playerId, MarkerFactory) {
+                    controller: function ($scope,$uibModalInstance, markerAdded, playerId, MarkerFactory, uuid2) {
                         $scope.vm = {
                             isSaving: false,
                             marker: {
+                                Id: uuid2.newguid(),
                                 PlayerId: playerId,
                                 Name: '',
                                 Manufacturer: '',
